@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>儿童专注力检测 - KoKoPal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b6b;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+
+        .quiz-container {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .card-title h2 {
+            font-size: 24px;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 15px;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffa502);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #ffffff;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .option:hover {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .option.selected {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(255, 165, 2, 0.2) 100%);
+            color: #ff6b6b;
+        }
+
+        .result-card {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            color: white;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+        }
+
+        .score-number {
+            font-size: 56px;
+            font-weight: 700;
+        }
+
+        .score-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .personality-card {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 165, 2, 0.15) 100%);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .personality-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .personality-title {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .personality-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b6b;
+            margin-bottom: 12px;
+        }
+
+        .personality-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .level-excellent {
+            background: linear-gradient(135deg, #2ed573 0%, #7bed9f 100%);
+            color: #1e3d59;
+        }
+
+        .level-good {
+            background: linear-gradient(135deg, #70a1ff 0%, #5352ed 100%);
+            color: white;
+        }
+
+        .level-average {
+            background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%);
+            color: white;
+        }
+
+        .level-need-improve {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+        }
+
+        .report-section {
+            text-align: left;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .report-section h3 {
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-section p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header-title h1 {
+                font-size: 18px;
+            }
+
+            .logo-text {
+                display: none;
+            }
+
+            .quiz-container {
+                padding: 20px 20px;
+            }
+
+            .card {
+                padding: 30px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-stats {
+                display: none;
+            }
+
+            .card {
+                padding: 25px 20px;
+            }
+
+            .card-title h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">K</div>
+                    <span class="logo-text">KoKoPal</span>
+                </div>
+                <div class="header-title">
+                    <h1>儿童专注力检测</h1>
+                    <p>了解孩子的学习专注力水平</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-value">20</div>
+                    <div class="stat-label">测评题目</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5-8</div>
+                    <div class="stat-label">分钟</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">6-15</div>
+                    <div class="stat-label">适用年龄</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-container">
+            <div class="card">
+                <div id="page-contact" class="page active">
+                    <div class="card-title">
+                        <h2>开始专注力评测</h2>
+                        <p>请先填写联系方式，完成后即可开始儿童学习专注力评测</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">手机号码</label>
+                        <input type="tel" id="phone" placeholder="请输入您的手机号">
+                        <div class="error-message" id="phone-error">请输入正确的手机号码</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="childAge">孩子年龄</label>
+                        <input type="number" id="childAge" placeholder="请输入孩子的年龄" min="3" max="18">
+                        <div class="error-message" id="age-error">请输入孩子的年龄（3-18岁）</div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="goToQuiz()">开始测评</button>
+                </div>
+
+                <div id="page-quiz" class="page">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">第 1 题 / 共 20 题</div>
+
+                    <div class="question-card">
+                        <span class="question-number" id="question-number">第 1 题</span>
+                        <div class="question-text" id="question-text"></div>
+                        <div class="options" id="options"></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" style="display: none;">上一题</button>
+                        <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">下一题</button>
+                    </div>
+                </div>
+
+                <div id="page-loading" class="page">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>正在生成测评报告...</p>
+                    </div>
+                </div>
+
+                <div id="page-result" class="page">
+                    <div class="result-card">
+                        <div class="score-circle">
+                            <div class="score-number" id="score-number">0</div>
+                            <div class="score-label">总分 100</div>
+                        </div>
+                        <div class="level-badge" id="level-badge">专注力优秀</div>
+                        
+                        <div class="personality-card" id="personality-card">
+                            <div class="personality-icon" id="personality-icon">🧠</div>
+                            <div class="personality-title" id="personality-title">专注力类型</div>
+                            <div class="personality-name" id="personality-name">深度专注达人</div>
+                            <p class="personality-desc" id="personality-desc"></p>
+                        </div>
+                        
+                        <div class="report-section">
+                            <h3>📊 测评结果</h3>
+                            <p id="result-summary"></p>
+                        </div>
+                        
+                        <div class="report-section">
+                            <h3>💡 优势分析</h3>
+                            <p id="result-strengths"></p>
+                        </div>
+                        
+                        <div class="report-section">
+                            <h3>🎯 提升建议</h3>
+                            <p id="result-suggestions"></p>
+                        </div>
+                        
+                        <div class="report-section">
+                            <h3>🔍 深度行为分析</h3>
+                            <p id="result-analysis"></p>
+                        </div>
+                        
+                        <div class="report-section product-card">
+                            <h3>🚀 个性化提升方案</h3>
+                            <p id="result-product"></p>
+                        </div>
+                        
+                        <div class="report-section notice-card">
+                            <h3>⚠️ 注意事项</h3>
+                            <p>本报告基于家长观察填写，属于行为筛查性评估，不构成医学诊断依据。若孩子专注力问题严重影响学习和日常生活，建议咨询专业的儿童心理或发育行为医生。注意力缺陷多动障碍（ADHD）等情况需要专业评估。本测评结果仅供参考，不同评估时间、填写人可能影响结果。</p>
+                        </div>
+                        
+                        <div class="report-section contact-card">
+                            <h3>💬 联系我们</h3>
+                            <p>扫码添加企业微信，获取专属专注力训练方案：</p>
+                            <div style="text-align: center; margin-top: 15px;">
+                                <img src="qrcode.png" 
+                                     alt="企业微信二维码" 
+                                     style="width: 200px; height: 200px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                <p style="margin: 10px 0 0 0; font-size: 14px; color: #999;">扫码添加企业微信</p>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="resetQuiz()">重新测评</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { text: "孩子在看书或写作业时，能否保持专注？", reverse: false },
+            { text: "孩子在做感兴趣的事情（如玩游戏、画画）时，是否非常投入？", reverse: false },
+            { text: "孩子在课堂上或听别人讲话时，是否容易分心？", reverse: true },
+            { text: "孩子做作业时，是否经常被周围的声音或事物打扰？", reverse: true },
+            { text: "孩子是否能按要求完成需要较长时间的任务？", reverse: false },
+            { text: "孩子在排队或等待时，是否显得不耐烦？", reverse: true },
+            { text: "孩子是否经常忘记把注意力放在需要做的事情上？", reverse: true },
+            { text: "孩子在做需要集中注意力的事情时，是否显得很吃力？", reverse: true },
+            { text: "孩子是否能安静地坐下来完成一项任务？", reverse: false },
+            { text: "孩子在玩拼图或积木时，是否能坚持较长时间？", reverse: false },
+            { text: "孩子是否经常从一个活动转移到另一个活动，无法坚持？", reverse: true },
+            { text: "孩子在听故事时，是否能专注地听完？", reverse: false },
+            { text: "孩子是否经常丢失或忘记自己的东西？", reverse: true },
+            { text: "孩子在需要集中注意力的场合，是否容易感到烦躁？", reverse: true },
+            { text: "孩子是否能仔细地完成细节性的任务？", reverse: false },
+            { text: "孩子在学习时，是否容易被无关的想法干扰？", reverse: true },
+            { text: "孩子是否能遵守需要专注的规则（如图书馆、课堂）？", reverse: false },
+            { text: "孩子在做作业时，是否需要不断提醒才能继续？", reverse: true },
+            { text: "孩子对新鲜事物是否能保持较长时间的好奇心？", reverse: false },
+            { text: "孩子是否能在嘈杂环境中专注做自己的事情？", reverse: false }
+        ];
+
+        const options = [
+            { text: "从不", score: 1 },
+            { text: "很少", score: 2 },
+            { text: "有时", score: 3 },
+            { text: "经常", score: 4 },
+            { text: "总是", score: 5 }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(20).fill(null);
+        let userInfo = {};
+
+        const FEISHU_WEBHOOK_URL = "https://open.feishu.cn/open-apis/bot/v2/hook/dd5d3c51-e31f-4d11-8e8e-01a9356518a3";
+
+        function validateContact() {
+            let valid = true;
+            
+            const phone = document.getElementById('phone').value.trim();
+            const childAge = document.getElementById('childAge').value.trim();
+
+            if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+                document.getElementById('phone-error').classList.add('show');
+                valid = false;
+            } else {
+                document.getElementById('phone-error').classList.remove('show');
+            }
+
+            if (!childAge || childAge < 3 || childAge > 18) {
+                document.getElementById('age-error').classList.add('show');
+                valid = false;
+            } else {
+                document.getElementById('age-error').classList.remove('show');
+            }
+
+            if (valid) {
+                userInfo = { phone, childAge, timestamp: Date.now() };
+            }
+
+            return valid;
+        }
+
+        function goToQuiz() {
+            if (validateContact()) {
+                showPage('page-quiz');
+                renderQuestion();
+            }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function renderQuestion() {
+            const question = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `第 ${currentQuestion + 1} 题 / 共 ${questions.length} 题`;
+            document.getElementById('question-number').textContent = `第 ${currentQuestion + 1} 题`;
+            document.getElementById('question-text').textContent = question.text;
+
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option' + (answers[currentQuestion] === option.score ? ' selected' : '');
+                div.textContent = option.text;
+                div.onclick = () => selectOption(option.score);
+                optionsContainer.appendChild(div);
+            });
+
+            document.getElementById('prev-btn').style.display = currentQuestion > 0 ? 'block' : 'none';
+            document.getElementById('next-btn').textContent = currentQuestion < questions.length - 1 ? '下一题' : '提交问卷';
+        }
+
+        function selectOption(score) {
+            answers[currentQuestion] = score;
+            document.querySelectorAll('.option').forEach((el, index) => {
+                el.classList.toggle('selected', options[index].score === score);
+            });
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === null) {
+                alert('请选择一个选项');
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        function submitQuiz() {
+            showPage('page-loading');
+            
+            let totalScore = 0;
+            questions.forEach((q, index) => {
+                if (q.reverse) {
+                    totalScore += 6 - answers[index];
+                } else {
+                    totalScore += answers[index];
+                }
+            });
+
+            const normalizedScore = Math.round((totalScore / 100) * 100);
+            
+            setTimeout(() => {
+                showResult(normalizedScore);
+                sendToFeishu(normalizedScore);
+            }, 1500);
+        }
+
+        function showResult(score) {
+            document.getElementById('score-number').textContent = score;
+            
+            let level, levelClass, summary, strengths, suggestions, analysis, product;
+            
+            if (score >= 80) {
+                level = '专注力优秀';
+                levelClass = 'level-excellent';
+                summary = '恭喜！您的孩子专注力非常出色，在同龄孩子中表现优异。孩子能够很好地集中注意力完成任务，这对学习和生活都非常有利。';
+                strengths = '孩子具有很好的自我控制能力，能够抵制干扰，专注于目标。这种专注力将帮助孩子在学业和兴趣发展上取得更好的成绩。';
+                suggestions = '继续保持良好的学习和生活习惯，鼓励孩子参加一些需要高度专注的活动，如围棋、钢琴、绘画等，进一步提升专注力水平。';
+                analysis = '从深度行为分析来看，您的孩子在以下几个方面表现出色：\n\n🧠 持续注意力：孩子能够长时间保持专注，无论是学习还是游戏，都能持续投入。这种稳定的注意力持续时间是专注力的核心优势。\n\n🎯 选择性注意力：孩子具有良好的抗干扰能力，能够在嘈杂环境或面对其他诱惑时，依然专注于当前任务。\n\n⏱️ 冲动控制：孩子在等待和过渡环节表现出色，能够控制即时冲动，这对于学习和社交发展都非常重要。\n\n📋 工作记忆：孩子能够有效管理自己的注意力资源，记得该做的事情，减少遗漏和遗忘。\n\n🔄 任务转换：虽然这是孩子的优势领域，但也可以适当练习在不同任务间灵活切换，进一步提升认知灵活性。';
+                product = '您的孩子专注力基础扎实，具备很大的发展潜力。建议持续关注以下几个方面：\n\n✨ 挑战任务：适当引入需要高度专注的复杂任务，如棋类、乐器等，进一步提升专注力品质。\n\n✨ 兴趣拓展：支持孩子发展兴趣爱好，在感兴趣领域中持续深耕。\n\n💡 可崽助力：可崽能够持续追踪孩子的专注行为表现，通过AI识别孩子的学习行为，精准判断专注程度，分析是否存在分心情况，并生成详细的量化报告，帮助家长科学了解孩子的专注力发展状态。';
+            } else if (score >= 65) {
+                level = '专注力良好';
+                levelClass = 'level-good';
+                summary = '您的孩子专注力处于良好水平，能够较好地完成日常学习任务，但在某些情况下可能会出现分心现象。';
+                strengths = '孩子在感兴趣的事情上能够保持较好的专注度，有一定的自我调节能力。';
+                suggestions = '建议通过一些专注力训练游戏来进一步提升，如舒尔特方格、迷宫游戏等。同时注意保证充足的睡眠和合理的饮食。';
+                analysis = '从深度行为分析来看，您的孩子呈现出以下特点：\n\n🧠 任务相关专注：孩子对感兴趣或主动选择的任务表现出色，但在被动要求的任务（如作业）上专注度有所下降。这是常见的专注力模式。\n\n🎯 环境影响敏感：孩子的专注力受环境影响较大，在嘈杂或刺激丰富的环境中容易分心。这种选择性注意力特点说明孩子对环境刺激较为敏感。\n\n⏱️ 冲动控制尚可：孩子在大多数情况下能够控制冲动，但在疲劳或无聊时可能会表现出不耐烦。需要关注孩子的作息和状态。\n\n📋 记忆管理：孩子偶尔会出现忘记任务或物品的情况，这与工作记忆的发展阶段有关，随着年龄增长会逐步改善。\n\n💡 关键发现：孩子在需要持续专注的任务中，偶尔会出现注意力漂移，这可能与环境中的干扰因素或任务本身的吸引力有关。';
+                product = '根据您孩子的专注力特点，建议从以下几个方面着手提升：\n\n✨ 任务设计：将学习任务分解为更短的时段，交替进行不同类型的任务，提高参与度。\n\n✨ 环境管理：为孩子创造相对安静、少干扰的学习环境，减少外界刺激对专注力的影响。\n\n✨ 状态关注：注意观察孩子在不同时间段（如早晨、下午）的专注表现，利用最佳状态完成重要任务。\n\n💡 可崽助力：可崽能够识别孩子学习时的行为表现，自动判断专注程度，分析分心情况，并生成详细的量化报告，帮助家长科学了解孩子的专注力状态，针对性地进行培养和训练。';
+            } else if (score >= 50) {
+                level = '专注力一般';
+                levelClass = 'level-average';
+                summary = '您的孩子专注力处于中等水平，在需要长时间专注的任务上可能会遇到一些困难。';
+                strengths = '孩子在短时间内还是能够集中注意力的，有提升的潜力。';
+                suggestions = '建议制定规律的作息时间，减少电子产品使用时间，多进行户外活动。可以尝试分段学习法，每20-30分钟休息5分钟。';
+                analysis = '从深度行为分析来看，您的孩子可能存在以下特点：\n\n🧠 持续注意力挑战：孩子在需要长时间专注的任务上表现不稳定，可能更容易感到疲劳或无聊。这是专注力发展的正常阶段，但需要适当引导。\n\n🎯 干扰敏感度高：孩子对周围环境中的声音、人物或其他刺激比较敏感，容易被无关刺激吸引注意力。这种特点说明孩子的感知觉处理较为敏锐。\n\n⏱️ 冲动控制需关注：孩子在等待、过渡或面对挫折时，可能更容易表现出不耐烦或冲动行为。这可能影响学习和社交表现。\n\n📋 记忆管理待加强：孩子可能经常出现忘记任务、丢失物品的情况，这与工作记忆的容量和策略使用有关。\n\n🔄 任务转换困难：孩子可能在从一个活动转换到另一个活动时遇到困难，需要更多的时间和过渡支持。\n\n💡 行为模式：您的孩子可能更倾向于寻求新鲜刺激，对重复性或需要持续努力的任务兴趣下降较快。';
+                product = '针对您孩子的专注力特点，建议采取以下策略：\n\n✨ 任务分段：将较长的任务分解为多个短时段，采用「番茄工作法」，每段15-20分钟，中间适当休息。\n\n✨ 环境简化：减少学习环境中的干扰因素，如在安静的空间学习，收起与任务无关的物品。\n\n✨ 状态调整：关注孩子的能量状态，在精力充沛时完成需要高度专注的任务。\n\n✨ 兴趣引导：通过游戏化的方式提升任务吸引力，让孩子在乐趣中保持专注。\n\n💡 可崽助力：可崽能够通过AI精准识别孩子学习时的行为表现，智能判断专注程度和分心情况，生成详细的量化报告，帮助家长和专业人士更准确地了解孩子的专注力状态，从而制定更有效的培养方案。';
+            } else {
+                level = '需提升专注力';
+                levelClass = 'level-need-improve';
+                summary = '您的孩子在专注力方面可能需要更多的关注和训练，容易分心可能会影响学习效率。';
+                strengths = '每个孩子都有自己的闪光点，也许孩子在其他方面（如创造力、运动能力）有独特的优势。';
+                suggestions = '建议咨询专业人士，进行系统的专注力训练。同时营造安静整洁的学习环境，减少干扰因素，培养孩子的时间管理能力。';
+                analysis = '从深度行为分析来看，您的孩子可能存在以下特点：\n\n🧠 持续注意力明显不足：孩子在需要长时间集中注意力的任务上表现出明显的困难，可能很快就会感到疲劳、烦躁或失去兴趣。这可能影响学习任务的完成质量和效率。\n\n🎯 高度干扰敏感：孩子对环境中的各种刺激非常敏感，容易被无关的声音、动作或视觉刺激吸引注意力。这种高度敏感性可能是专注力困难的核心原因之一。\n\n⏱️ 冲动控制困难：孩子在等待、遵守规则或控制即时反应方面表现出较大困难。这可能表现为不耐烦、容易打断他人、难以遵守指令等行为。\n\n📋 工作记忆薄弱：孩子可能频繁出现忘记任务、指令、物品等情况。工作记忆的薄弱可能影响孩子组织和执行任务的能力。\n\n🔄 任务转换挑战：孩子可能在活动之间的过渡时表现出困难，容易固着在某个活动或难以从当前任务中抽离。\n\n😰 情绪调节问题：孩子在面对需要专注的挑战时，可能更容易感到挫败、烦躁或焦虑，这反过来又会加重专注力的困难。\n\n💡 综合评估：您孩子的专注力表现可能已影响到日常学习和生活，建议寻求专业的评估和支持。同时，家庭环境的调整和有针对性的训练可能会带来改善。';
+                product = '针对您孩子的专注力特点，建议家长采取以下策略：\n\n✨ 专业支持：首先建议咨询儿童心理或发育行为专业人士，进行系统评估和专业指导。\n\n✨ 环境优化：创造一个安静、整洁、少刺激的学习环境，减少干扰因素。\n\n✨ 任务调整：将任务分解为孩子能够完成的短时段，及时给予正向反馈，建立成功体验。\n\n✨ 规律作息：建立固定的作息时间表，保证充足的睡眠和营养，为专注力提供生理基础。\n\n✨ 亲子互动：通过高质量的亲子互动游戏，在自然情境中培养孩子的专注力和自控能力。\n\n💡 可崽助力：可崽能够通过AI行为识别技术，客观分析孩子学习时的专注程度，识别分心行为，生成详细的量化报告。这些数据可以帮助家长和专业人员更准确地了解孩子的专注力状态，为干预和训练提供科学依据。';
+            }
+
+            const badge = document.getElementById('level-badge');
+            badge.textContent = level;
+            badge.className = 'level-badge ' + levelClass;
+
+            document.getElementById('result-summary').textContent = summary;
+            document.getElementById('result-strengths').textContent = strengths;
+            document.getElementById('result-suggestions').textContent = suggestions;
+            document.getElementById('result-analysis').textContent = analysis;
+            document.getElementById('result-product').textContent = product;
+
+            const personality = getPersonalityType();
+            document.getElementById('personality-icon').textContent = personality.icon;
+            document.getElementById('personality-name').textContent = personality.name;
+            document.getElementById('personality-desc').textContent = personality.desc;
+
+            showPage('page-result');
+        }
+
+        function getPersonalityType() {
+            const types = [
+                {
+                    id: 'deep-focus',
+                    icon: '🧠',
+                    name: '深度专注达人',
+                    desc: '这类孩子能够进入深度专注状态，一旦投入学习就不易被打扰。他们在需要持续专注的任务上表现出色，适合进行需要深入思考的学习活动。可以通过适当引入多样化任务来培养思维的灵活性。'
+                },
+                {
+                    id: 'flexible-switch',
+                    icon: '⚡',
+                    name: '灵活切换达人',
+                    desc: '这类孩子在科目之间切换非常顺畅，思维弹性好，不容易陷入思维定式。擅长跨学科学习。可以通过加强专项深度学习来弥补有时"浮于表面"的不足。'
+                },
+                {
+                    id: 'creative-divergent',
+                    icon: '🌟',
+                    name: '创意发散达人',
+                    desc: '这类孩子思维活跃，善于联想和创新。他们往往能从不同角度看待问题，富有创造力。可以通过结构化训练来培养逻辑思维的严谨性。'
+                },
+                {
+                    id: 'detail-oriented',
+                    icon: '🔍',
+                    name: '细节把控达人',
+                    desc: '这类孩子注重细节，做事严谨认真。他们在需要精确性的任务上表现出色，善于发现问题。可以通过大局观训练来提升整体把握能力。'
+                }
+            ];
+
+            let deepFocusScore = 0, flexibleScore = 0, creativeScore = 0, detailScore = 0;
+
+            const deepFocusQuestions = [0, 4, 8, 9];
+            const flexibleQuestions = [2, 3, 10, 14];
+            const creativeQuestions = [1, 12, 18, 19];
+            const detailQuestions = [6, 7, 13, 15];
+
+            deepFocusQuestions.forEach(q => {
+                const answer = answers[q];
+                if (answer) {
+                    deepFocusScore += answers[q];
+                }
+            });
+
+            flexibleQuestions.forEach(q => {
+                const answer = answers[q];
+                if (answer) {
+                    flexibleScore += answers[q];
+                }
+            });
+
+            creativeQuestions.forEach(q => {
+                const answer = answers[q];
+                if (answer) {
+                    creativeScore += answers[q];
+                }
+            });
+
+            detailQuestions.forEach(q => {
+                const answer = answers[q];
+                if (answer) {
+                    detailScore += answers[q];
+                }
+            });
+
+            const maxScore = Math.max(deepFocusScore, flexibleScore, creativeScore, detailScore);
+
+            if (deepFocusScore === maxScore) return types[0];
+            if (flexibleScore === maxScore) return types[1];
+            if (creativeScore === maxScore) return types[2];
+            return types[3];
+        }
+
+        async function sendToFeishu(score) {
+            if (!FEISHU_WEBHOOK_URL) {
+                console.error('❌ 未配置飞书Webhook地址');
+                saveToLocal(score);
+                return;
+            }
+            
+            console.log('📤 正在发送群通知...');
+
+            try {
+                const payload = {
+                    msg_type: 'post',
+                    content: {
+                        post: {
+                            zh_cn: {
+                                title: '🧠 儿童专注力检测结果',
+                                content: [
+                                    [{ tag: 'text', text: '📱 手机号码：' + userInfo.phone + '\n' }],
+                                    [{ tag: 'text', text: '👶 孩子年龄：' + userInfo.childAge + '岁\n' }],
+                                    [{ tag: 'text', text: '📊 测评得分：' + score + '分\n' }],
+                                    [{ tag: 'text', text: '🕐 提交时间：' + new Date().toLocaleString('zh-CN') }]
+                                ]
+                            }
+                        }
+                    }
+                };
+                
+                const response = await fetch(FEISHU_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    console.log('✅ 群通知发送成功');
+                } else {
+                    console.error('❌ 发送失败，状态码：', response.status);
+                    saveToLocal(score);
+                }
+            } catch (error) {
+                console.error('❌ 发送到飞书失败:', error);
+                saveToLocal(score);
+            }
+        }
+
+        function saveToLocal(score) {
+            const data = {
+                ...userInfo,
+                answers: answers,
+                score: score,
+                submitTime: new Date().toLocaleString('zh-CN')
+            };
+            
+            let records = JSON.parse(localStorage.getItem('focusQuizRecords') || '[]');
+            records.push(data);
+            localStorage.setItem('focusQuizRecords', JSON.stringify(records));
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            answers = new Array(20).fill(null);
+            userInfo = {};
+            document.getElementById('phone').value = '';
+            document.getElementById('childAge').value = '';
+            showPage('page-contact');
+        }
+    </script>
+</body>
+</html>
