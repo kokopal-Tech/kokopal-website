@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# local temp
+.tmp_pdf/
+
+# deploy secrets / local-only config
+*.pem
+scripts/deploy_web.conf
+
+# keep template config
+!scripts/deploy_web.conf.example

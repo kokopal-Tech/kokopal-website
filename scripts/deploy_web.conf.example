@@ -1,0 +1,22 @@
+# 复制本文件为 deploy_web.conf 后按需修改
+
+# 必填
+HOST="39.97.235.81"
+DOMAIN="demo.kokopal.com"
+LOCAL_DIR="demo-site"
+REMOTE_DIR="/usr/share/nginx/demo"
+
+# 可选
+USER="root"
+PORT="22"
+SSH_KEY=""              # 例如: ~/.ssh/kokopal.pem
+SSH_EXTRA_OPTS=""       # 例如: -o ProxyJump=bastion
+SITE_NAME=""
+NGINX_MODE="confd"      # confd 或 full
+SKIP_NGINX_CONFIG="false"
+DRY_RUN="false"
+
+ENSURE_CONFD_INCLUDE="true"
+ENABLE_HTTPS="false"
+CERTBOT_EMAIL=""
+HTTPS_REDIRECT="true"

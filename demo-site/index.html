@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kokopal Demo Site</title>
+  <style>
+    :root {
+      --bg1: #fef6e4;
+      --bg2: #dff6ff;
+      --text: #1f2937;
+      --brand: #f97316;
+      --card: rgba(255, 255, 255, 0.85);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang SC", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 10% 20%, var(--bg1), transparent 35%),
+                  radial-gradient(circle at 90% 10%, var(--bg2), transparent 30%),
+                  #fff;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(760px, 100%);
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.08);
+    }
+    h1 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 42px); }
+    p { margin: 8px 0; line-height: 1.6; }
+    .pill {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .meta { margin-top: 18px; font-size: 13px; opacity: .7; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Kokopal Deployment Demo</h1>
+    <p>如果你能看到这个页面，说明自动部署流程已经成功。</p>
+    <p>这个 Demo 目录是 <code>demo-site</code>，可直接用部署脚本上传。</p>
+    <span class="pill">Deploy OK Test</span>
+    <div class="meta" id="meta"></div>
+  </main>
+
+  <script>
+    const now = new Date();
+    document.getElementById('meta').textContent =
+      '页面生成时间: ' + now.toLocaleString('zh-CN');
+  </script>
+</body>
+</html>
