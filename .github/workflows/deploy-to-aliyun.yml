@@ -23,8 +23,64 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect website directories
+        id: detect
+        run: |
+          set -euo pipefail
+
+          mapfile -t all_web_dirs < <(
+            find . -maxdepth 1 -mindepth 1 -type d \
+              ! -name '.git' \
+              ! -name '.github' \
+              ! -name '.tmp_pdf' \
+              ! -name 'scripts' \
+              -printf '%f\n' | sort
+          )
+
+          if [[ "${#all_web_dirs[@]}" -eq 0 ]]; then
+            echo "No website directories found."
+            echo "dirs=" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" || "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
+            selected_dirs=("${all_web_dirs[@]}")
+          else
+            declare -A web_dir_lookup=()
+            declare -A selected_lookup=()
+            selected_dirs=()
+
+            for dir in "${all_web_dirs[@]}"; do
+              web_dir_lookup["${dir}"]=1
+            done
+
+            while IFS= read -r path; do
+              top_level="${path%%/*}"
+              if [[ -n "${web_dir_lookup[${top_level}]:-}" && -z "${selected_lookup[${top_level}]:-}" ]]; then
+                selected_lookup["${top_level}"]=1
+                selected_dirs+=("${top_level}")
+              fi
+            done < <(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+          fi
+
+          if [[ "${#selected_dirs[@]}" -eq 0 ]]; then
+            echo "No website directory changes detected. Skipping deploy."
+            echo "dirs=" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          printf 'Deploying changed directories: %s\n' "${selected_dirs[*]}"
+          {
+            echo "dirs<<EOF"
+            printf '%s\n' "${selected_dirs[@]}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
 
       - name: Validate required secrets
+        if: steps.detect.outputs.dirs != ''
         run: |
           set -euo pipefail
           test -n "${SSH_HOST}" || { echo "Missing secret: ALIYUN_HOST"; exit 1; }
@@ -32,6 +88,7 @@ jobs:
           test -n "${{ secrets.ALIYUN_SSH_PRIVATE_KEY }}" || { echo "Missing secret: ALIYUN_SSH_PRIVATE_KEY"; exit 1; }
 
       - name: Configure SSH key
+        if: steps.detect.outputs.dirs != ''
         run: |
           set -euo pipefail
           mkdir -p ~/.ssh
@@ -47,25 +104,14 @@ jobs:
           ssh-keyscan -p "${SSH_PORT}" "${SSH_HOST}" >> ~/.ssh/known_hosts
 
       - name: Deploy website directories
+        if: steps.detect.outputs.dirs != ''
         run: |
           set -euo pipefail
 
           ssh_opts=(-i ~/.ssh/aliyun_deploy_key -p "${SSH_PORT}")
           remote="${SSH_USER}@${SSH_HOST}"
 
-          mapfile -t web_dirs < <(
-            find . -maxdepth 1 -mindepth 1 -type d \
-              ! -name '.git' \
-              ! -name '.github' \
-              ! -name '.tmp_pdf' \
-              ! -name 'scripts' \
-              -printf '%f\n' | sort
-          )
-
-          if [[ "${#web_dirs[@]}" -eq 0 ]]; then
-            echo "No website directories found to deploy."
-            exit 0
-          fi
+          mapfile -t web_dirs <<< "${{ steps.detect.outputs.dirs }}"
 
           echo "Deploying directories: ${web_dirs[*]}"
           ssh "${ssh_opts[@]}" "${remote}" "mkdir -p '${REMOTE_BASE_DIR}'"
@@ -93,6 +139,7 @@ jobs:
           done
 
       - name: Reload Nginx
+        if: steps.detect.outputs.dirs != ''
         run: |
           set -euo pipefail
           ssh -i ~/.ssh/aliyun_deploy_key -p "${SSH_PORT}" "${SSH_USER}@${SSH_HOST}" \

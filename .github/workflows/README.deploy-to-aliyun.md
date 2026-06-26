@@ -4,13 +4,15 @@
 
 ## 部署规则
 
-Action 会把仓库根目录下的网页文件夹同步到阿里云服务器：
+Action 会把本次提交中发生变化的网页文件夹同步到阿里云服务器：
 
 - `customerservice/` -> `/usr/share/nginx/customerservice/`
 - `demo/` -> `/usr/share/nginx/demo/`
 - `html/` -> `/usr/share/nginx/html/`
 - `kidsfocus/` -> `/usr/share/nginx/kidsfocus/`
 - `privacy/` -> `/usr/share/nginx/privacy/`
+
+例如只修改 `demo/` 里的文件时，只会部署 `/usr/share/nginx/demo/`。如果本次提交没有网页目录变化，例如只改 README 或 workflow，会跳过部署和 Nginx reload。
 
 它会自动跳过：
 
@@ -20,7 +22,7 @@ Action 会把仓库根目录下的网页文件夹同步到阿里云服务器：
 - `.tmp_pdf/`
 - `.DS_Store`
 
-如果之后新增同级网页目录，例如 `modules/`，合入 `main` 后也会自动部署到 `/usr/share/nginx/modules/`。
+如果之后新增同级网页目录，例如 `modules/`，合入 `main` 后也会自动部署到 `/usr/share/nginx/modules/`。在 GitHub Actions 页面手动运行 workflow 时，会部署全部网页目录。
 
 ## 需要配置的 GitHub Secrets
 
