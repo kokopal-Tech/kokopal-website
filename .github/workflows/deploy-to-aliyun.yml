@@ -1,0 +1,93 @@
+name: Deploy static pages to Aliyun
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-static-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      REMOTE_BASE_DIR: ${{ secrets.ALIYUN_REMOTE_BASE_DIR || '/usr/share/nginx' }}
+      SSH_HOST: ${{ secrets.ALIYUN_HOST }}
+      SSH_PORT: ${{ secrets.ALIYUN_PORT || '22' }}
+      SSH_USER: ${{ secrets.ALIYUN_USER || 'root' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          set -euo pipefail
+          test -n "${SSH_HOST}" || { echo "Missing secret: ALIYUN_HOST"; exit 1; }
+          test -n "${SSH_USER}" || { echo "Missing secret: ALIYUN_USER"; exit 1; }
+          test -n "${{ secrets.ALIYUN_SSH_PRIVATE_KEY }}" || { echo "Missing secret: ALIYUN_SSH_PRIVATE_KEY"; exit 1; }
+
+      - name: Configure SSH key
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.ALIYUN_SSH_PRIVATE_KEY }}" > ~/.ssh/aliyun_deploy_key
+          chmod 600 ~/.ssh/aliyun_deploy_key
+          ssh-keyscan -p "${SSH_PORT}" "${SSH_HOST}" >> ~/.ssh/known_hosts
+
+      - name: Deploy website directories
+        run: |
+          set -euo pipefail
+
+          ssh_opts=(-i ~/.ssh/aliyun_deploy_key -p "${SSH_PORT}")
+          remote="${SSH_USER}@${SSH_HOST}"
+
+          mapfile -t web_dirs < <(
+            find . -maxdepth 1 -mindepth 1 -type d \
+              ! -name '.git' \
+              ! -name '.github' \
+              ! -name '.tmp_pdf' \
+              ! -name 'scripts' \
+              -printf '%f\n' | sort
+          )
+
+          if [[ "${#web_dirs[@]}" -eq 0 ]]; then
+            echo "No website directories found to deploy."
+            exit 0
+          fi
+
+          echo "Deploying directories: ${web_dirs[*]}"
+          ssh "${ssh_opts[@]}" "${remote}" "mkdir -p '${REMOTE_BASE_DIR}'"
+
+          remote_has_rsync=false
+          if ssh "${ssh_opts[@]}" "${remote}" "command -v rsync >/dev/null 2>&1"; then
+            remote_has_rsync=true
+          fi
+
+          for dir in "${web_dirs[@]}"; do
+            remote_dir="${REMOTE_BASE_DIR}/${dir}"
+            echo "Deploying ${dir}/ -> ${remote_dir}/"
+            ssh "${ssh_opts[@]}" "${remote}" "mkdir -p '${remote_dir}'"
+
+            if [[ "${remote_has_rsync}" == "true" ]]; then
+              rsync -az --delete \
+                --exclude '.DS_Store' \
+                -e "ssh -i ~/.ssh/aliyun_deploy_key -p ${SSH_PORT}" \
+                "${dir}/" "${remote}:${remote_dir}/"
+            else
+              echo "Remote rsync not found; falling back to tar over SSH."
+              ssh "${ssh_opts[@]}" "${remote}" "find '${remote_dir}' -mindepth 1 -maxdepth 1 -exec rm -rf {} +"
+              tar --exclude='.DS_Store' -C "${dir}" -cf - . | ssh "${ssh_opts[@]}" "${remote}" "tar -C '${remote_dir}' -xf -"
+            fi
+          done
+
+      - name: Reload Nginx
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/aliyun_deploy_key -p "${SSH_PORT}" "${SSH_USER}@${SSH_HOST}" \
+            "nginx -t && systemctl reload nginx"

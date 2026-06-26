@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酷可伴 - 基于场景的物理通用AI智能化解决方案公司</title>
+    <meta name="description" content="酷可伴是全球领先的基于场景的物理通用AI智能化解决方案公司，致力于将人工智能带进千家万户。">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cyber-black': '#050505',
+                        'cyber-dark': '#111111',
+                        'cyber-border': '#222222',
+                        'cyber-cyan': '#00f0ff',
+                        'cyber-white': '#e0e0e0',
+                        'cyber-gray': '#666666',
+                    },
+                    fontFamily: {
+                        'display': ['Space Grotesk', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-gradient-cyan {
+                background: linear-gradient(135deg, #00f0ff 0%, #00a8b3 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+                border: 1px solid #222222;
+            }
+            .card-hover:hover {
+                border-color: #00f0ff;
+                box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background-color: #00f0ff;
+            color: #050505;
+        }
+
+        .nav-link {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #00f0ff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+    </style>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- 导航 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-cyber-black/80 backdrop-blur-md border-b border-cyber-border">
+        <div class="max-w-7xl mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <a href="#hero" class="flex items-center gap-3 group">
+                    <img src="logo.png" alt="酷可伴" class="h-10 w-auto">
+                </a>
+
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#hero" class="nav-link active text-cyber-white hover:text-cyber-cyan transition-colors font-medium">首页</a>
+                    <a href="#products" class="nav-link text-cyber-gray hover:text-cyber-cyan transition-colors font-medium">产品服务</a>
+                    <a href="#about" class="nav-link text-cyber-gray hover:text-cyber-cyan transition-colors font-medium">关于我们</a>
+                    <a href="#contact" class="nav-link text-cyber-gray hover:text-cyber-cyan transition-colors font-medium">联系我们</a>
+                </div>
+
+                <button id="mobile-menu-btn" class="md:hidden text-cyber-white">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4 border-t border-cyber-border pt-4">
+                <div class="flex flex-col gap-4">
+                    <a href="#hero" class="text-cyber-white hover:text-cyber-cyan transition-colors font-medium">首页</a>
+                    <a href="#products" class="text-cyber-gray hover:text-cyber-cyan transition-colors font-medium">产品服务</a>
+                    <a href="#about" class="text-cyber-gray hover:text-cyber-cyan transition-colors font-medium">关于我们</a>
+                    <a href="#contact" class="text-cyber-gray hover:text-cyber-cyan transition-colors font-medium">联系我们</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== 首页 / Hero ===== -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <canvas id="particle-canvas" class="absolute inset-0 z-0"></canvas>
+        <div class="absolute inset-0 bg-gradient-to-b from-cyber-black via-transparent to-cyber-black z-10"></div>
+
+        <div class="relative z-20 text-center px-6 max-w-5xl mx-auto">
+            <div class="mb-6 inline-flex items-center gap-2 px-4 py-2 border border-cyber-cyan/30 bg-cyber-cyan/5 rounded-full">
+                <span class="w-2 h-2 bg-cyber-cyan rounded-full animate-pulse"></span>
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider">Global Pioneer</span>
+            </div>
+
+            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-cyber-white mb-6 leading-tight">
+                <span class="text-gradient-cyan">酷可伴</span>
+            </h1>
+
+            <p class="font-body text-lg md:text-xl text-cyber-gray mb-8 max-w-3xl mx-auto leading-relaxed">
+                基于场景的物理通用 AI 智能化解决方案公司
+                <br>
+                <span class="text-cyber-cyan font-medium">Make AI accessible to every home, for everyone.</span>
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <a href="#contact" class="px-8 py-4 bg-cyber-cyan text-cyber-black font-display font-bold uppercase tracking-wider hover:bg-cyber-cyan/90 transition-colors">
+                    联系我们
+                </a>
+                <a href="#products" class="px-8 py-4 border border-cyber-cyan text-cyber-cyan font-display font-bold uppercase tracking-wider hover:bg-cyber-cyan/10 transition-colors">
+                    了解产品
+                </a>
+            </div>
+
+            <div class="animate-bounce">
+                <a href="#products" class="text-cyber-gray hover:text-cyber-cyan transition-colors">
+                    <i data-lucide="chevron-down" class="w-8 h-8 mx-auto"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 使命与愿景 ===== -->
+    <section id="mission" class="py-24 bg-cyber-dark">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">Mission & Vision</span>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-cyber-white mb-4">使命与愿景</h2>
+            </div>
+
+            <div class="bg-cyber-black p-12 md:p-16 rounded-lg border border-cyber-border text-center mb-16">
+                <div class="max-w-3xl mx-auto">
+                    <h3 class="font-display text-4xl md:text-5xl font-bold text-cyber-white mb-6">将人工智能带进千家万户</h3>
+                    <p class="font-body text-cyber-gray text-xl mb-8">Our Mission</p>
+                    <p class="font-body text-cyber-gray leading-relaxed">Make AI accessible to every home, for everyone.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover p-8 bg-cyber-black rounded-lg text-center">
+                    <div class="font-display text-5xl font-bold text-cyber-cyan mb-4">10万</div>
+                    <h4 class="font-display text-lg font-bold text-cyber-white mb-3">挽救生命</h4>
+                    <p class="font-body text-cyber-gray text-sm">10年内，通过我们的技术和产品，挽救10万条生命</p>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-black rounded-lg text-center">
+                    <div class="font-display text-5xl font-bold text-cyber-cyan mb-4">90%</div>
+                    <h4 class="font-display text-lg font-bold text-cyber-white mb-3">减少记忆成本</h4>
+                    <p class="font-body text-cyber-gray text-sm">10年内，帮助用户减少90%的记忆成本，让生活更轻松</p>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-black rounded-lg text-center">
+                    <div class="font-display text-5xl font-bold text-cyber-cyan mb-4">10倍</div>
+                    <h4 class="font-display text-lg font-bold text-cyber-white mb-3">提升年假时长</h4>
+                    <p class="font-body text-cyber-gray text-sm">10年内，帮助企业提升10倍的年假时长，提升员工幸福感</p>
+                </div>
+            </div>
+
+            <div class="mt-16 p-8 md:p-12 bg-cyber-black rounded-lg border border-cyber-border">
+                <div class="text-center mb-8">
+                    <h3 class="font-display text-2xl font-bold text-cyber-white mb-4">大语言模型到 AGI Robert 之路</h3>
+                </div>
+                <div class="flex flex-wrap justify-center items-center gap-4 md:gap-8">
+                    <div class="text-center">
+                        <div class="font-mono text-sm text-cyber-gray mb-2">2017-2018</div>
+                        <div class="font-body text-cyber-white text-sm">基于Transformer架构的LLM模型问世</div>
+                    </div>
+                    <div class="w-8 h-px bg-cyber-border hidden md:block"></div>
+                    <div class="text-center">
+                        <div class="font-mono text-sm text-cyber-gray mb-2">Now</div>
+                        <div class="font-body text-cyber-cyan text-sm">多模态LLM模型 + 垂直场景智能硬件</div>
+                    </div>
+                    <div class="w-8 h-px bg-cyber-border hidden md:block"></div>
+                    <div class="text-center">
+                        <div class="font-mono text-sm text-cyber-gray mb-2">2026-2028E</div>
+                        <div class="font-body text-cyber-white text-sm">多模态LLM模型 + 通用场景智能硬件</div>
+                    </div>
+                    <div class="w-8 h-px bg-cyber-border hidden md:block"></div>
+                    <div class="text-center">
+                        <div class="font-mono text-sm text-cyber-gray mb-2">Before 2030</div>
+                        <div class="font-body text-cyber-white text-sm">机器人价格持续下探，开始进入大众消费者市场</div>
+                    </div>
+                    <div class="w-8 h-px bg-cyber-border hidden md:block"></div>
+                    <div class="text-center">
+                        <div class="font-mono text-sm text-cyber-gray mb-2">Before 2035</div>
+                        <div class="font-body text-cyber-white text-sm">AGI Robert 低成本替代95%人类重复性劳动</div>
+                    </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <p class="font-body text-cyber-gray">我们希望抓住机器人大规模进入家庭前的窗口期；将物理通用AI硬件带入每个人的生活和工作中；提升生活幸福感。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 核心技术 ===== -->
+    <section id="core-tech" class="py-24 bg-cyber-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">Core Technology</span>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-cyber-white mb-4">核心技术能力</h2>
+                <p class="font-body text-cyber-gray max-w-2xl mx-auto">行业首创"基于场景的AI智能化"技术，覆盖家庭、办公室、通勤等场景的通用技术平台底座</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover p-8 bg-cyber-dark rounded-lg">
+                    <div class="w-14 h-14 border border-cyber-cyan/30 flex items-center justify-center mb-6 hover:border-cyber-cyan transition-colors">
+                        <i data-lucide="brain-circuit" class="w-7 h-7 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">场景自主推理</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed">基于大模型环境特征抽取与用户行为偏好学习，设备可自主理解空间、周围环境、时段与用户交互习惯，推理用户意图并自动执行场景任务。</p>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-dark rounded-lg">
+                    <div class="w-14 h-14 border border-cyber-cyan/30 flex items-center justify-center mb-6 hover:border-cyber-cyan transition-colors">
+                        <i data-lucide="network" class="w-7 h-7 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">多设备分布式协同</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed">支持多设备协同接力、状态共享与动作联动，显著提升复杂家庭场景的系统智能性与覆盖效率。</p>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-dark rounded-lg">
+                    <div class="w-14 h-14 border border-cyber-cyan/30 flex items-center justify-center mb-6 hover:border-cyber-cyan transition-colors">
+                        <i data-lucide="cpu" class="w-7 h-7 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">高泛化性AI决策大脑</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed">持续打造高泛化性AI决策大脑，可快速赋能陪伴玩具、机器狗、服务机器人等多元智能产品。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 产品服务 ===== -->
+    <section id="products" class="py-24 bg-cyber-dark">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">Products & Services</span>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-cyber-white mb-4">产品服务</h2>
+                <p class="font-body text-cyber-gray text-lg max-w-2xl mx-auto">三阶段ToC & ToB产品方案，渐进式推进商业化落地</p>
+            </div>
+
+            <div class="relative">
+                <div class="absolute left-1/2 top-0 bottom-0 w-px bg-cyber-border hidden md:block"></div>
+
+                <div class="space-y-16 md:space-y-0">
+                    <div class="md:flex items-center justify-between">
+                        <div class="md:w-1/2 md:pr-12 text-right md:text-left order-2 md:order-1">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-cyber-cyan/10 border border-cyber-cyan/30 rounded-full mb-4">
+                                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                <span class="font-mono text-xs text-cyber-cyan">即将发售</span>
+                            </div>
+                            <h2 class="font-display text-3xl font-bold text-cyber-white mb-4">阶段一：垂直场景的 AI 智能硬件</h2>
+                            <p class="font-body text-cyber-gray mb-6 leading-relaxed">针对老人安全防护、儿童学习陪护、宠物看护等垂直场景研发，拥有风险行为/优秀行为记录和提醒能力、AI儿童学习行为监督，宠物行为记录和饮食记录功能。</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">深挖场景需求，针对性功能设计</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">风险行为/优秀行为记录和提醒</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">AI儿童学习行为监督</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">宠物行为记录和饮食管理</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                            <div class="relative flex justify-center md:justify-start">
+                                <div class="w-24 h-24 border-2 border-cyber-cyan bg-cyber-black flex items-center justify-center rounded-full z-10">
+                                    <i data-lucide="baby" class="w-12 h-12 text-cyber-cyan"></i>
+                                </div>
+                                <div class="absolute inset-0 w-24 h-24 border-2 border-cyber-cyan/30 rounded-full animate-ping"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:flex items-center justify-between">
+                        <div class="md:w-1/2 md:pr-12">
+                            <div class="relative flex justify-center md:justify-end">
+                                <div class="w-24 h-24 border-2 border-cyber-cyan/50 bg-cyber-dark flex items-center justify-center rounded-full z-10">
+                                    <i data-lucide="home" class="w-12 h-12 text-cyber-cyan"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-cyber-cyan/5 border border-cyber-cyan/20 rounded-full mb-4">
+                                <span class="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                                <span class="font-mono text-xs text-cyber-cyan">研发中</span>
+                            </div>
+                            <h2 class="font-display text-3xl font-bold text-cyber-white mb-4">阶段二：通用场景的 AI 智能硬件</h2>
+                            <p class="font-body text-cyber-gray mb-6 leading-relaxed">根据设备所处的环境，自行推理、判断用户部署设备的动机，理解用户需求，自闭环场景任务。多设备共存时，能够接力任务流的执行，通过主设备自行管理其他设备。</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">任务主动理解，自动推理用户意图</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">任务流多端串行，设备间协同</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">主设备管理其他设备，智能调度</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="md:flex items-center justify-between">
+                        <div class="md:w-1/2 md:pr-12 text-right md:text-left order-2 md:order-1">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-cyber-dark border border-cyber-border rounded-full mb-4">
+                                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                                <span class="font-mono text-xs text-cyber-gray">规划中</span>
+                            </div>
+                            <h2 class="font-display text-3xl font-bold text-cyber-white mb-4">阶段三：解决方案 for Robots</h2>
+                            <p class="font-body text-cyber-gray mb-6 leading-relaxed">通过前两个产品类型的研发，强化模型在泛化场景下的理解与任务执行能力，适配AI陪伴玩具、机器狗、机器人等多种产品，助力其更快融入人类生活与工作。</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">聪明大脑赋能各类Robots</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">快速融入人类生活与工作</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-5 h-5 text-cyber-cyan flex-shrink-0"></i>
+                                    <span class="font-body text-cyber-white">成为机器人的算法供应商</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                            <div class="relative flex justify-center md:justify-start">
+                                <div class="w-24 h-24 border-2 border-cyber-cyan/30 bg-cyber-dark flex items-center justify-center rounded-full z-10">
+                                    <i data-lucide="robot" class="w-12 h-12 text-cyber-cyan"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 可崽产品 -->
+    <section id="kezai" class="py-24 bg-cyber-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">Featured Product</span>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-cyber-white mb-4">「可崽」- 针对儿童场景的 AI 智能硬件</h2>
+                <p class="font-body text-cyber-gray max-w-2xl mx-auto">全栈AI赋能家庭陪伴场景，双职工家庭儿童学习陪护、老人安全看护、宠物监测为刚性需求</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+                <div>
+                    <div class="relative">
+                        <div class="w-full aspect-square bg-cyber-dark border border-cyber-border rounded-lg flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="w-32 h-32 border-2 border-cyber-cyan rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <i data-lucide="sparkles" class="w-16 h-16 text-cyber-cyan"></i>
+                                </div>
+                                <span class="font-display text-2xl font-bold text-cyber-white">可崽</span>
+                                <p class="font-body text-cyber-gray mt-2">AI 智能陪伴助手</p>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-cyber-cyan/10 rounded-full blur-2xl"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="font-body text-cyber-gray mb-8 leading-relaxed">
+                        以儿童学习陪护这一产品为例。用户可以通过这一款设备实现风险行为提醒、儿童优秀表现记录、学习专注力检测、语音陪伴交互和专业启迪课程讲授等原本需要在多个产品才能实现的功能。在体验对齐同类产品的基础上，大幅帮助用户降低购买成本。
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-cyber-dark border border-cyber-border text-cyber-white text-sm rounded">儿童学习陪护</span>
+                        <span class="px-4 py-2 bg-cyber-dark border border-cyber-border text-cyber-white text-sm rounded">老人安全看护</span>
+                        <span class="px-4 py-2 bg-cyber-dark border border-cyber-border text-cyber-white text-sm rounded">宠物监测</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="card-hover p-6 bg-cyber-dark rounded-lg text-center">
+                    <div class="w-16 h-16 border border-cyber-cyan/30 flex items-center justify-center mx-auto mb-4 hover:border-cyber-cyan transition-colors">
+                        <i data-lucide="message-circle-heart" class="w-8 h-8 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-cyber-white mb-3">智能陪伴</h3>
+                    <p class="font-body text-cyber-gray text-sm leading-relaxed">依托大模型AI，为孩子打造专属智能玩伴，温和有趣的语言陪聊、答疑、讲故事。</p>
+                </div>
+
+                <div class="card-hover p-6 bg-cyber-dark rounded-lg text-center">
+                    <div class="w-16 h-16 border border-cyber-cyan/30 flex items-center justify-center mx-auto mb-4 hover:border-cyber-cyan transition-colors">
+                        <i data-lucide="eye" class="w-8 h-8 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-cyber-white mb-3">专注力检测</h3>
+                    <p class="font-body text-cyber-gray text-sm leading-relaxed">通过智能感知与AI分析，精准检测孩子学习时的专注状态，实时反馈专注时长。</p>
+                </div>
+
+                <div class="card-hover p-6 bg-cyber-dark rounded-lg text-center">
+                    <div class="w-16 h-16 border border-cyber-cyan/30 flex items-center justify-center mx-auto mb-4 hover:border-cyber-cyan transition-colors">
+                        <i data-lucide="book-open" class="w-8 h-8 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-cyber-white mb-3">AI伴读</h3>
+                    <p class="font-body text-cyber-gray text-sm leading-relaxed">内置优质正版课程与绘本内容，AI伴读沉浸式陪伴，标准发音、趣味互动。</p>
+                </div>
+
+                <div class="card-hover p-6 bg-cyber-dark rounded-lg text-center">
+                    <div class="w-16 h-16 border border-cyber-cyan/30 flex items-center justify-center mx-auto mb-4 hover:border-cyber-cyan transition-colors">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-cyber-white mb-3">智能呵护</h3>
+                    <p class="font-body text-cyber-gray text-sm leading-relaxed">AI智能识别孩子行为状态，及时发现危险行为并提醒守护，捕捉优秀表现正向鼓励。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 算法能力 -->
+    <section id="algorithm" class="py-24 bg-cyber-dark">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">Algorithm Capabilities</span>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-cyber-white mb-4">算法能力介绍</h2>
+                <p class="font-body text-cyber-gray max-w-2xl mx-auto">在研的智能硬件重点突破场景意图推理与多设备分布式协同技术</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="card-hover p-8 bg-cyber-black rounded-lg">
+                    <div class="font-mono text-sm text-cyber-cyan mb-4">01</div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">场景意图推理</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed mb-6">基于大模型环境特征抽取与用户行为偏好学习，设备可自主理解空间、周围环境、时段与用户交互习惯，推理用户意图并自动执行场景任务，无需手动配置规则。</p>
+                    <div class="bg-cyber-dark p-4 rounded border border-cyber-border">
+                        <p class="font-mono text-xs text-cyber-gray mb-2">应用示例:</p>
+                        <ul class="space-y-2">
+                            <li class="font-body text-sm text-cyber-white flex items-start gap-2">
+                                <span class="text-cyber-cyan">-</span>
+                                <span>放在阳台：告诉你洗衣机何时洗好衣服，花草何时需要浇水</span>
+                            </li>
+                            <li class="font-body text-sm text-cyber-white flex items-start gap-2">
+                                <span class="text-cyber-cyan">-</span>
+                                <span>贴在镜子上：告诉你护肤建议，上班前告知天气与穿衣建议</span>
+                            </li>
+                            <li class="font-body text-sm text-cyber-white flex items-start gap-2">
+                                <span class="text-cyber-cyan">-</span>
+                                <span>带到实验室：帮助做实验记录、引导实验流程、安全风险报警</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-black rounded-lg">
+                    <div class="font-mono text-sm text-cyber-cyan mb-4">02</div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">多设备分布式协同</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed mb-6">支持多设备协同接力、状态共享与动作联动，显著提升复杂家庭场景的系统智能性与覆盖效率。支持覆出行、办公室、实验室、餐厅、医院、养老院等其他泛化性场所与机构。</p>
+                    <div class="bg-cyber-dark p-4 rounded border border-cyber-border">
+                        <p class="font-mono text-xs text-cyber-gray mb-2">覆盖场景:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-cyber-black border border-cyber-border text-cyber-gray text-xs rounded">出行</span>
+                            <span class="px-2 py-1 bg-cyber-black border border-cyber-border text-cyber-gray text-xs rounded">办公室</span>
+                            <span class="px-2 py-1 bg-cyber-black border border-cyber-border text-cyber-gray text-xs rounded">实验室</span>
+                            <span class="px-2 py-1 bg-cyber-black border border-cyber-border text-cyber-gray text-xs rounded">餐厅</span>
+                            <span class="px-2 py-1 bg-cyber-black border border-cyber-border text-cyber-gray text-xs rounded">医院</span>
+                            <span class="px-2 py-1 bg-cyber-black border border-cyber-border text-cyber-gray text-xs rounded">养老院</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-black rounded-lg">
+                    <div class="font-mono text-sm text-cyber-cyan mb-4">03</div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">高泛化性AI决策大脑</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed mb-6">通过持续优化不同场景下模型的数据闭环，优化大模型微调与场景适配能力，提升智能体的交互自然度、任务精准度与环境适应力，加速前沿AI技术在家庭生活场景的规模化落地。</p>
+                    <div class="bg-cyber-dark p-4 rounded border border-cyber-border">
+                        <p class="font-mono text-xs text-cyber-gray mb-2">对标公司:</p>
+                        <ul class="space-y-2">
+                            <li class="font-body text-sm text-cyber-white flex items-center gap-2">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-cyber-cyan"></i>
+                                <span>Momentum</span>
+                            </li>
+                            <li class="font-body text-sm text-cyber-white flex items-center gap-2">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-cyber-cyan"></i>
+                                <span>文远知行</span>
+                            </li>
+                            <li class="font-body text-sm text-cyber-white flex items-center gap-2">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-cyber-cyan"></i>
+                                <span>WayMo</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-cyber-black p-8 md:p-12 rounded-lg border border-cyber-border">
+                <div class="text-center mb-8">
+                    <h3 class="font-display text-2xl font-bold text-cyber-white mb-2">生态赋能与规模化落地</h3>
+                    <p class="font-body text-cyber-gray">通俗的说，我们对标Momentum、文远知行、WayMo等公司，在未来成为机器人的算法供应商；借助我们各类泛化场景下的数据优势，形成竞争壁垒</p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-8">
+                    <div class="text-center">
+                        <div class="font-display text-4xl font-bold text-cyber-cyan mb-2">陪伴玩具</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-display text-4xl font-bold text-cyber-cyan mb-2">机器狗</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-display text-4xl font-bold text-cyber-cyan mb-2">服务机器人</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 关于我们 ===== -->
+    <section id="about" class="py-24 bg-cyber-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">About Us</span>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-cyber-white mb-4">关于我们</h2>
+                <p class="font-body text-cyber-gray text-lg max-w-2xl mx-auto">团队资深且高效，产品全栈自研，成熟供应链管理</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover p-8 bg-cyber-dark rounded-lg text-center">
+                    <div class="w-20 h-20 border border-cyber-cyan flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="users" class="w-10 h-10 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">团队资深高效</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed">Founders均拥有人工智能、大模型、智能硬件一线大厂工作经验，且均来自世界顶级人工智能公司和科技公司。全栈人才梯队均为工程师，其中硕博占比100%。</p>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-dark rounded-lg text-center">
+                    <div class="w-20 h-20 border border-cyber-cyan flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="cpu" class="w-10 h-10 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">产品全栈自研</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed">行业首创"基于场景的AI智能化"技术，覆盖家庭、办公室、通勤等场景的通用技术平台底座。全球领先的多模态后处理模型，针对不同使用场景创新定义不同模型特有skill。</p>
+                </div>
+
+                <div class="card-hover p-8 bg-cyber-dark rounded-lg text-center">
+                    <div class="w-20 h-20 border border-cyber-cyan flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="factory" class="w-10 h-10 text-cyber-cyan"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-cyber-white mb-4">成熟供应链管理</h3>
+                    <p class="font-body text-cyber-gray leading-relaxed">量产稳定高效，产能充足可靠，快速响应用户需求。品控体系严苛，全流程质量管控，产品一致性与可靠性出众。成本与供应可控，核心元器件采用稳定供应链。</p>
+                </div>
+            </div>
+
+            <div class="mt-16 p-8 md:p-12 bg-cyber-dark rounded-lg border border-cyber-border">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h2 class="font-display text-3xl font-bold text-cyber-white mb-6">用户价值聚焦</h2>
+                        <p class="font-body text-cyber-gray leading-relaxed mb-6">产品序列丰富，拥有ToC的产品全流程研发能力和分发渠道，以及ToB 0到1的算法部署、调试、交付能力。我们专注于为用户创造真正的价值，通过技术创新解决实际问题。</p>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-cyber-cyan"></i>
+                                <span class="font-body text-cyber-white">ToC 全流程研发</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-cyber-cyan"></i>
+                                <span class="font-body text-cyber-white">多渠道分发能力</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-cyber-cyan"></i>
+                                <span class="font-body text-cyber-white">ToB 0到1交付</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="aspect-video bg-cyber-black border border-cyber-border rounded-lg flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="w-16 h-16 border border-cyber-cyan/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i data-lucide="sparkles" class="w-8 h-8 text-cyber-cyan"></i>
+                                </div>
+                                <p class="font-body text-cyber-gray">高效团队 · 自研产品 · 用户导向 · 成熟供应链</p>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-cyber-cyan/10 rounded-full blur-3xl"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 核心团队 -->
+            <div class="mt-24">
+                <div class="text-center mb-16">
+                    <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">Core Team</span>
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-cyber-white mb-4">核心团队</h2>
+                    <p class="font-body text-cyber-gray max-w-2xl mx-auto">四位创始人，来自顶级人工智能公司和科技公司，拥有丰富的行业经验</p>
+                </div>
+
+                <div class="grid md:grid-cols-4 gap-8">
+                    <div class="card-hover p-8 bg-cyber-dark rounded-lg text-center">
+                        <h3 class="font-display text-3xl font-bold text-cyber-white mb-2">Alan</h3>
+                        <p class="font-mono text-sm text-cyber-cyan mb-6">CTO</p>
+                        <p class="font-body text-cyber-gray text-sm leading-relaxed">智能驾驶与AI硬件领域多年经验，拥有10+项核心发明专利，在国际顶级期刊与学术会议发表多篇高水平论文。曾任头部主机厂端到端智能驾驶算法开发负责人。浙江⼤学⼯学博⼠。</p>
+                    </div>
+
+                    <div class="card-hover p-8 bg-cyber-dark rounded-lg text-center">
+                        <h3 class="font-display text-3xl font-bold text-cyber-white mb-2">Ian</h3>
+                        <p class="font-mono text-sm text-cyber-cyan mb-6">首席产品官</p>
+                        <p class="font-body text-cyber-gray text-sm leading-relaxed">AI智能硬件与交互设计领域专家，车企与机器人公司交叉行业经验。主导沃尔沃XC座舱交互、Momentum车载HMI交互、科沃斯机器人产品设计与用户研究。东南大学机械工程硕士。</p>
+                    </div>
+
+                    <div class="card-hover p-8 bg-cyber-dark rounded-lg text-center">
+                        <h3 class="font-display text-3xl font-bold text-cyber-white mb-2">Ziang</h3>
+                        <p class="font-mono text-sm text-cyber-cyan mb-6">CEO</p>
+                        <p class="font-body text-cyber-gray text-sm leading-relaxed">智能驾驶领域产品专家，连续创业者。曾于阿里巴巴、Momentum、吉利汽车研究院、轻舟智航负责产品设计与交互优化。澳门科技大学管理学硕士。</p>
+                    </div>
+
+                    <div class="card-hover p-8 bg-cyber-dark rounded-lg text-center">
+                        <h3 class="font-display text-3xl font-bold text-cyber-white mb-2">Louis</h3>
+                        <p class="font-mono text-sm text-cyber-cyan mb-6">首席模型工程师</p>
+                        <p class="font-body text-cyber-gray text-sm leading-relaxed">深耕深度学习与计算机视觉领域，发表2篇顶会学术论文，拥有多项发明专利。5年以上计算机视觉实战经验，擅长技术方案产品化落地。主导多个AI大模型项目。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 全国布局 -->
+            <div class="mt-16 p-8 bg-cyber-dark rounded-lg border border-cyber-border">
+                <h3 class="font-display text-xl font-bold text-cyber-white mb-6 text-center">全国布局</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 border border-cyber-cyan/30 flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="map-pin" class="w-8 h-8 text-cyber-cyan"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-cyber-white mb-2">日照生产装配中心</h4>
+                        <p class="font-body text-cyber-gray text-sm">产能充足可靠，快速响应需求</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 border border-cyber-cyan/30 flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="map-pin" class="w-8 h-8 text-cyber-cyan"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-cyber-white mb-2">苏州研发中心</h4>
+                        <p class="font-body text-cyber-gray text-sm">硬件研发与工程落地</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 border border-cyber-cyan/30 flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="map-pin" class="w-8 h-8 text-cyber-cyan"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-cyber-white mb-2">杭州研发中心</h4>
+                        <p class="font-body text-cyber-gray text-sm">算法研发与产品设计</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 联系我们 ===== -->
+    <section id="contact" class="py-24 bg-cyber-dark">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-cyber-cyan uppercase tracking-wider mb-4 block">Contact Us</span>
+                <h2 class="font-display text-4xl md:text-6xl font-bold text-cyber-white mb-6">联系我们</h2>
+                <p class="font-body text-cyber-gray text-lg max-w-2xl mx-auto">欢迎与我们取得联系，了解更多产品信息或讨论合作机会</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+                <div class="card-hover p-6 bg-cyber-black rounded-lg">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 border border-cyber-cyan/30 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="phone" class="w-6 h-6 text-cyber-cyan"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-cyber-white mb-2">电话</h3>
+                            <p class="font-body text-cyber-gray">13043608226</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-hover p-6 bg-cyber-black rounded-lg">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 border border-cyber-cyan/30 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="mail" class="w-6 h-6 text-cyber-cyan"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-cyber-white mb-2">邮箱</h3>
+                            <p class="font-body text-cyber-gray">ziang@kokopal.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-hover p-6 bg-cyber-black rounded-lg">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 border border-cyber-cyan/30 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="map-pin" class="w-6 h-6 text-cyber-cyan"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-cyber-white mb-2">办公地点</h3>
+                            <div class="space-y-2">
+                                <p class="font-body text-cyber-gray">日照生产装配中心</p>
+                                <p class="font-body text-cyber-gray">苏州研发中心</p>
+                                <p class="font-body text-cyber-gray">杭州研发中心</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-hover p-6 bg-cyber-black rounded-lg">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 border border-cyber-cyan/30 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="building-2" class="w-6 h-6 text-cyber-cyan"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-cyber-white mb-2">公司名称</h3>
+                            <p class="font-body text-cyber-gray">杭州酷可伴智能科技有限公司</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 页脚 ===== -->
+    <footer class="py-16 bg-cyber-black border-t border-cyber-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <img src="logo.png" alt="酷可伴" class="h-10 w-auto">
+                    </div>
+                    <p class="font-body text-cyber-gray mb-6 max-w-md">基于场景的物理通用AI智能化解决方案公司，致力于将人工智能带进千家万户。</p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="w-10 h-10 border border-cyber-border flex items-center justify-center hover:border-cyber-cyan hover:text-cyber-cyan transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 border border-cyber-border flex items-center justify-center hover:border-cyber-cyan hover:text-cyber-cyan transition-colors">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 border border-cyber-border flex items-center justify-center hover:border-cyber-cyan hover:text-cyber-cyan transition-colors">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold text-cyber-white mb-6">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#hero" class="font-body text-cyber-gray hover:text-cyber-cyan transition-colors">首页</a></li>
+                        <li><a href="#products" class="font-body text-cyber-gray hover:text-cyber-cyan transition-colors">产品服务</a></li>
+                        <li><a href="#about" class="font-body text-cyber-gray hover:text-cyber-cyan transition-colors">关于我们</a></li>
+                        <li><a href="#contact" class="font-body text-cyber-gray hover:text-cyber-cyan transition-colors">联系我们</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold text-cyber-white mb-6">联系方式</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="phone" class="w-4 h-4 text-cyber-cyan"></i>
+                            <span class="font-body text-cyber-gray">13043608226</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="mail" class="w-4 h-4 text-cyber-cyan"></i>
+                            <span class="font-body text-cyber-gray">ziang@kokopal.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-cyber-border flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="font-body text-cyber-gray text-sm">@2026 杭州酷可伴智能科技有限公司 版权所有</p>
+                <p class="font-body text-cyber-gray text-sm">浙ICP备2026028024号-2</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // 移动端菜单
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileMenuBtn.querySelector('svg');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.setAttribute('data-lucide', 'menu');
+                } else {
+                    icon.setAttribute('data-lucide', 'x');
+                }
+                lucide.createIcons();
+            });
+
+            // 粒子背景
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+
+                draw() {
+                    ctx.fillStyle = '#00f0ff';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function connectParticles() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 150) {
+                            ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 * (1 - distance / 150)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+                connectParticles();
+                requestAnimationFrame(animate);
+            }
+
+            resizeCanvas();
+            initParticles();
+            animate();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initParticles();
+            });
+
+            // 导航高亮
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (scrollY >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

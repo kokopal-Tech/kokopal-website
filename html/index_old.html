@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酷可伴智能科技 | kokopal - AI智能硬件领导者</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #0066FF;
+            --secondary-color: #00D4FF;
+            --accent-color: #FF6B6B;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #F8FAFC;
+            --bg-white: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0044AA 100%);
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .logo-text p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0044AA 50%, #003388 100%);
+            padding: 150px 0 120px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+        
+        .hero h2 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .features {
+            padding: 80px 0;
+            background: var(--bg-white);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h3 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        .section-title p {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        
+        .feature-icon.panda {
+            background: linear-gradient(135deg, #FFE4E1 0%, #FFB6C1 100%);
+        }
+        
+        .feature-icon.round {
+            background: linear-gradient(135deg, #E6E6FA 0%, #DDA0DD 100%);
+        }
+        
+        .feature-icon.robot {
+            background: linear-gradient(135deg, #E0FFFF 0%, #87CEEB 100%);
+        }
+        
+        .feature-card h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card .tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .feature-card .tag.dev {
+            background: #FF9500;
+        }
+        
+        .product-intro {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #F0F7FF 0%, #E0F0FF 100%);
+        }
+        
+        .product-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .product-content h3 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        .product-content h3 span {
+            color: var(--primary-color);
+        }
+        
+        .product-content p {
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .product-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 102, 255, 0.2);
+        }
+        
+        .keke-features {
+            padding: 80px 0;
+            background: var(--bg-white);
+        }
+        
+        .keke-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .keke-card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 35px 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .keke-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .keke-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .keke-card h4::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .keke-card p {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .technology {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0044AA 100%);
+            color: white;
+        }
+        
+        .technology .section-title h3,
+        .technology .section-title p {
+            color: white;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .tech-content h4 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .tech-content p {
+            font-size: 15px;
+            line-height: 1.9;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+        
+        .tech-images {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .tech-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        .contact {
+            padding: 80px 0;
+            background: var(--bg-white);
+        }
+        
+        .contact-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .contact-content h3 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        .contact-content p {
+            color: var(--text-light);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-light);
+        }
+        
+        .contact-item span {
+            font-size: 20px;
+        }
+        
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        footer .logo {
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        footer p {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h2 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <div class="logo-icon">K</div>
+                    <div class="logo-text">
+                        <h1>酷可伴智能科技</h1>
+                        <p>kokopal</p>
+                    </div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#products">产品方案</a></li>
+                    <li><a href="#features">核心功能</a></li>
+                    <li><a href="#technology">技术能力</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h2>AI赋能家庭陪伴场景</h2>
+            <p>三阶段ToC & ToB产品方案，渐进式推进商业化落地，用科技守护每一个家庭</p>
+            <a href="#products" class="cta-btn">了解更多</a>
+        </div>
+    </section>
+    
+    <section class="features" id="products">
+        <div class="container">
+            <div class="section-title">
+                <h3>产品方案</h3>
+                <p>三阶段产品策略，从垂直场景到通用场景，最终赋能各类机器人</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon panda">🐼</div>
+                    <h4>阶段一：垂直场景的AI智能硬件</h4>
+                    <p>针对老人安全防护、儿童学习陪护、宠物看护等垂直场景研发，拥有风险行为/优秀行为记录和提醒能力。</p>
+                    <span class="tag">即将发售</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon round">⚪</div>
+                    <h4>阶段二：通用场景的AI智能硬件</h4>
+                    <p>根据设备所处环境自行推理、判断用户部署设备的动机，理解用户需求，自闭环场景任务。</p>
+                    <span class="tag dev">研发中</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon robot">🤖</div>
+                    <h4>阶段三：解决方案 for Robots</h4>
+                    <p>通过前两个产品类型的研发，强化模型在泛化场景下的理解与任务执行能力，适配各类机器人产品。</p>
+                    <span class="tag dev">研发中</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="product-intro">
+        <div class="container">
+            <div class="product-content">
+                <div>
+                    <h3>垂直领域打通技术栈：<span>全栈AI赋能家庭陪伴场景</span></h3>
+                    <p>双职工家庭儿童学习陪护、老人安全看护、宠物监测为刚性需求，用户对高性价比智能看护设备接受度极高，决策链短、复购与传播性强。</p>
+                    <p>以儿童学习陪护这一产品为例，用户可以通过这一款设备实现风险行为提醒、儿童优秀表现记录、学习专注力检测、语音陪伴交互和专业启迪课程讲授等原本需要在多个产品才能实现的功能。</p>
+                </div>
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20panda%20shaped%20AI%20smart%20device%20white%20background%20product%20photo&image_size=square_hd" alt="可崽AI智能硬件" class="product-image">
+            </div>
+        </div>
+    </section>
+    
+    <section class="keke-features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h3>针对儿童场景的AI智能硬件 ——「可崽」</h3>
+                <p>专为儿童打造的智能陪伴伙伴</p>
+            </div>
+            <div class="keke-grid">
+                <div class="keke-card">
+                    <h4>智能陪伴</h4>
+                    <p>依托大模型AI，为孩子打造专属智能玩伴。用温和有趣的语言陪聊、答疑、讲故事，引导孩子主动表达、激发好奇心与想象力。</p>
+                </div>
+                <div class="keke-card">
+                    <h4>智能呵护</h4>
+                    <p>AI智能识别孩子行为状态，既能及时发现危险行为并提醒守护，也能精准捕捉礼貌、专注、勇敢等优秀表现，及时正向鼓励。</p>
+                </div>
+                <div class="keke-card">
+                    <h4>专注力检测</h4>
+                    <p>通过智能感知与AI分析，精准检测孩子学习时的专注状态。实时反馈专注时长、分心情况，生成可视化报告。</p>
+                </div>
+                <div class="keke-card">
+                    <h4>AI伴读</h4>
+                    <p>内置优质正版课程与绘本内容，AI伴读沉浸式陪伴。标准发音、趣味互动、分段讲解，让孩子爱上阅读。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="technology" id="technology">
+        <div class="container">
+            <div class="section-title">
+                <h3>算法能力介绍</h3>
+                <p>通用场景技术突破：场景自主推理与多设备分布式协同</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-content">
+                    <h4>场景自主推理</h4>
+                    <p>基于大模型环境特征抽取与用户行为偏好学习，设备可自主理解空间、周围环境、时段与用户交互习惯，推理用户意图并自动执行场景任务，无需手动配置规则。</p>
+                    <h4>多设备分布式协同</h4>
+                    <p>支持多设备协同接力、状态共享与动作联动，显著提升复杂家庭场景的系统智能性与覆盖效率。支持出行、办公室、实验室、餐厅、医院、养老院等泛化性场所。</p>
+                </div>
+                <div class="tech-images">
+                    <div class="tech-image">⚫</div>
+                    <div class="tech-image">⚪</div>
+                    <div class="tech-image">🩷</div>
+                    <div class="tech-image">💜</div>
+                    <div class="tech-image">❤️</div>
+                    <div class="tech-image">💙</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h3>联系我们</h3>
+                <p>如果您对我们的产品感兴趣，或者有任何合作意向，欢迎与我们联系。</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>contact@kokopal.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>上海市浦东新区</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">K</div>
+                <div class="logo-text">
+                    <h1>酷可伴智能科技</h1>
+                    <p>kokopal</p>
+                </div>
+            </div>
+            <p>@2026 杭州酷可伴智能科技有限公司 版权所有</p>
+        </div>
+    </footer>
+</body>
+</html>

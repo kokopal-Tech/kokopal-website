@@ -12,6 +12,7 @@ PORT="22"
 SSH_KEY=""
 SSH_EXTRA_OPTS=""
 DOMAIN=""
+ALT_DOMAINS=""
 LOCAL_DIR=""
 REMOTE_DIR=""
 SITE_NAME=""
@@ -45,6 +46,7 @@ Options:
   --site-name <value>           站点标识，用于 conf 文件名 (default: 从 domain 推导)
   --ssh-key <value>             SSH 私钥路径，如 ~/.ssh/id_rsa
   --ssh-extra-opts <value>      额外 SSH 参数，如 "-o ProxyJump=bastion"
+  --alt-domains <value>         附加域名，空格分隔，如 "www.example.com m.example.com"
   --nginx-mode <confd|full>     Nginx 配置方式 (default: confd)
   --skip-nginx-config           仅上传文件，不改 Nginx 配置
   --ensure-confd-include <true|false>
@@ -100,6 +102,8 @@ while [[ $# -gt 0 ]]; do
       PORT="$2"; shift 2 ;;
     --domain)
       DOMAIN="$2"; shift 2 ;;
+    --alt-domains)
+      ALT_DOMAINS="$2"; shift 2 ;;
     --local-dir)
       LOCAL_DIR="$2"; shift 2 ;;
     --remote-dir)
@@ -168,6 +172,27 @@ fi
 
 if [[ -z "$SITE_NAME" ]]; then
   SITE_NAME="$(sanitize_site_name "$DOMAIN")"
+fi
+
+ALL_DOMAINS=("$DOMAIN")
+if [[ -n "$ALT_DOMAINS" ]]; then
+  read -r -a ALT_DOMAIN_LIST <<< "$ALT_DOMAINS"
+  for alt_domain in "${ALT_DOMAIN_LIST[@]}"; do
+    if [[ -n "$alt_domain" ]]; then
+      ALL_DOMAINS+=("$alt_domain")
+    fi
+  done
+fi
+
+ALIAS_SERVER_NAMES=""
+if [[ ${#ALL_DOMAINS[@]} -gt 1 ]]; then
+  for ((i=1; i<${#ALL_DOMAINS[@]}; i++)); do
+    if [[ -n "$ALIAS_SERVER_NAMES" ]]; then
+      ALIAS_SERVER_NAMES="${ALIAS_SERVER_NAMES} ${ALL_DOMAINS[$i]}"
+    else
+      ALIAS_SERVER_NAMES="${ALL_DOMAINS[$i]}"
+    fi
+  done
 fi
 
 SSH_OPTS="-p ${PORT} -o StrictHostKeyChecking=accept-new"
@@ -242,7 +267,7 @@ EOF
     SITE_CONF=$(cat <<CONF
 server {
   listen 80;
-  server_name ${DOMAIN};
+  server_name ${DOMAIN}${ALIAS_SERVER_NAMES:+ ${ALIAS_SERVER_NAMES}};
   root ${REMOTE_DIR};
   index index.html;
 
@@ -290,7 +315,7 @@ http {
 
   server {
     listen 80;
-    server_name ${DOMAIN};
+    server_name ${DOMAIN}${ALIAS_SERVER_NAMES:+ ${ALIAS_SERVER_NAMES}};
     root ${REMOTE_DIR};
     index index.html;
   }
@@ -323,10 +348,16 @@ if [[ -z "$OUT" ]]; then
   echo "[ERROR] nginx -T 无输出，无法完成自检"
   exit 1
 fi
-echo "$OUT" | grep -F "server_name __DOMAIN__;" >/dev/null || {
-  echo "[ERROR] 未在 nginx 生效配置中找到 server_name __DOMAIN__;"
+echo "$OUT" | grep -F "server_name __DOMAIN__" >/dev/null || {
+  echo "[ERROR] 未在 nginx 生效配置中找到 server_name __DOMAIN__"
   exit 1
 }
+if [[ -n "__ALIAS_SERVER_NAMES__" ]]; then
+  echo "$OUT" | grep -F "server_name __DOMAIN__ __ALIAS_SERVER_NAMES__" >/dev/null || {
+    echo "[ERROR] 未在 nginx 生效配置中找到 server_name __DOMAIN__ __ALIAS_SERVER_NAMES__"
+    exit 1
+  }
+fi
 echo "$OUT" | grep -F "root __REMOTE_DIR__;" >/dev/null || {
   echo "[ERROR] 未在 nginx 生效配置中找到 root __REMOTE_DIR__;"
   exit 1
@@ -336,6 +367,7 @@ EOF
 )
   CHECK_CMD="${CHECK_CMD//__DOMAIN__/$DOMAIN}"
   CHECK_CMD="${CHECK_CMD//__REMOTE_DIR__/$REMOTE_DIR}"
+  CHECK_CMD="${CHECK_CMD//__ALIAS_SERVER_NAMES__/$ALIAS_SERVER_NAMES}"
   ssh $SSH_OPTS "$REMOTE" "$CHECK_CMD"
 fi
 
@@ -350,34 +382,45 @@ domain="__DOMAIN__"
 root_dir="__REMOTE_DIR__"
 conf_path="__CONF_PATH__"
 email="__CERTBOT_EMAIL__"
-redirect_https="__HTTPS_REDIRECT__"
+alias_domains="__ALIAS_SERVER_NAMES__"
 
 if ! command -v certbot >/dev/null 2>&1; then
   (dnf install -y certbot || yum install -y certbot) >/dev/null
 fi
 
-if [[ -n "$email" ]]; then
-  certbot certonly --webroot -w "$root_dir" -d "$domain" --agree-tos --email "$email" --non-interactive || true
-else
-  certbot certonly --webroot -w "$root_dir" -d "$domain" --agree-tos --register-unsafely-without-email --non-interactive || true
+certbot_args=(certbot certonly --webroot -w "$root_dir" --cert-name "$domain" --expand -d "$domain")
+if [[ -n "$alias_domains" ]]; then
+  read -r -a alias_domain_list <<< "$alias_domains"
+  for alias_domain in "${alias_domain_list[@]}"; do
+    certbot_args+=(-d "$alias_domain")
+  done
 fi
+if [[ -n "$email" ]]; then
+  certbot_args+=(--agree-tos --email "$email" --non-interactive)
+else
+  certbot_args+=(--agree-tos --register-unsafely-without-email --non-interactive)
+fi
+"${certbot_args[@]}" || true
 
 if [[ ! -f "/etc/letsencrypt/live/${domain}/fullchain.pem" || ! -f "/etc/letsencrypt/live/${domain}/privkey.pem" ]]; then
   echo "[WARN] HTTPS 证书未就绪，保留 HTTP 配置不切换"
   exit 0
 fi
 
-if [[ "$redirect_https" == "true" ]]; then
 cat > "$conf_path" <<CONF
 server {
   listen 80;
-  server_name ${domain};
-  return 301 https://\$host\$request_uri;
+  server_name ${domain}${alias_domains:+ ${alias_domains}};
+  root ${root_dir};
+  index index.html;
+  location / {
+    try_files \$uri \$uri/ /index.html;
+  }
 }
 
 server {
   listen 443 ssl;
-  server_name ${domain};
+  server_name ${domain}${alias_domains:+ ${alias_domains}};
   root ${root_dir};
   index index.html;
 
@@ -391,35 +434,6 @@ server {
   }
 }
 CONF
-else
-cat > "$conf_path" <<CONF
-server {
-  listen 80;
-  server_name ${domain};
-  root ${root_dir};
-  index index.html;
-  location / {
-    try_files \$uri \$uri/ /index.html;
-  }
-}
-
-server {
-  listen 443 ssl;
-  server_name ${domain};
-  root ${root_dir};
-  index index.html;
-
-  ssl_certificate /etc/letsencrypt/live/${domain}/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/${domain}/privkey.pem;
-  include /etc/letsencrypt/options-ssl-nginx.conf;
-  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-
-  location / {
-    try_files \$uri \$uri/ /index.html;
-  }
-}
-CONF
-fi
 
 nginx -t
 systemctl restart nginx
@@ -431,7 +445,7 @@ EOF
     HTTPS_CMD="${HTTPS_CMD//__REMOTE_DIR__/$REMOTE_DIR}"
     HTTPS_CMD="${HTTPS_CMD//__CONF_PATH__/$CONF_PATH}"
     HTTPS_CMD="${HTTPS_CMD//__CERTBOT_EMAIL__/$CERTBOT_EMAIL}"
-    HTTPS_CMD="${HTTPS_CMD//__HTTPS_REDIRECT__/$HTTPS_REDIRECT}"
+    HTTPS_CMD="${HTTPS_CMD//__ALIAS_SERVER_NAMES__/$ALIAS_SERVER_NAMES}"
     ssh $SSH_OPTS "$REMOTE" "$HTTPS_CMD"
   fi
 fi
@@ -439,5 +453,8 @@ fi
 log "部署完成。请访问: http://${DOMAIN}"
 if [[ "$ENABLE_HTTPS" == "true" ]]; then
   log "如证书申请成功，也可访问: https://${DOMAIN}"
+  if [[ -n "$ALIAS_SERVER_NAMES" ]]; then
+    log "附加域名也已一并配置: ${ALIAS_SERVER_NAMES}"
+  fi
 fi
 log "请确认 DNS A 记录已指向服务器 IP。"

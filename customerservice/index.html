@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<!-- saved from url=(0089)file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户服务协议 — 可崽</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+      background: #f5f7fa;
+      color: #1a1a2e;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* Header */
+    .site-header {
+      background: linear-gradient(135deg, #1a3a6b 0%, #1f4e9a 60%, #2563c4 100%);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .site-header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .header-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.9);
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .site-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .site-header .subtitle {
+      color: rgba(255,255,255,0.75);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .header-meta {
+      display: inline-flex;
+      gap: 24px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 24px;
+      border-radius: 30px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+    }
+    .header-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* Layout */
+    .page-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 16px 60px;
+    }
+
+    /* Alert box */
+    .notice-box {
+      background: #fffbeb;
+      border: 1px solid #f5d76e;
+      border-left: 4px solid #f0a500;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      color: #7a5800;
+      line-height: 1.7;
+    }
+    .notice-box strong { color: #5a3f00; }
+
+    /* TOC */
+    .toc-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 24px 28px;
+      margin-bottom: 28px;
+    }
+    .toc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f4e9a;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 24px;
+    }
+    .toc-list li a {
+      text-decoration: none;
+      color: #374151;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 3px 0;
+      transition: color 0.2s;
+    }
+    .toc-list li a:hover { color: #1f4e9a; }
+    .toc-list li a::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #c5d8f5;
+      flex-shrink: 0;
+    }
+
+    /* Section card */
+    .section-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 30px 32px;
+      margin-bottom: 20px;
+      scroll-margin-top: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #eef2f9;
+    }
+    .section-number {
+      background: linear-gradient(135deg, #1f4e9a, #2563c4);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a2e;
+      letter-spacing: 0.5px;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f4e9a;
+      margin: 20px 0 10px;
+    }
+
+    p {
+      color: #374151;
+      margin-bottom: 12px;
+      line-height: 1.85;
+    }
+
+    /* Article clauses */
+    .clause {
+      margin-bottom: 14px;
+    }
+    .clause-number {
+      display: inline-block;
+      background: #eef2f9;
+      color: #1f4e9a;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 1px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* Lists */
+    .content-list {
+      list-style: none;
+      margin: 10px 0 14px 0;
+    }
+    .content-list li {
+      padding: 7px 0 7px 22px;
+      position: relative;
+      color: #374151;
+      border-bottom: 1px dashed #f0f2f7;
+      font-size: 14px;
+    }
+    .content-list li:last-child { border-bottom: none; }
+    .content-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 2px;
+      color: #1f4e9a;
+      font-size: 11px;
+      top: 9px;
+    }
+
+    /* Highlight block */
+    .highlight-block {
+      background: #f0f5ff;
+      border-left: 3px solid #1f4e9a;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #1e3a6e;
+    }
+
+    /* Contact card */
+    .contact-card {
+      background: linear-gradient(135deg, #eef5ff, #f0f7ff);
+      border: 1px solid #c5d8f5;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 10px;
+    }
+    .contact-card p { margin-bottom: 6px; font-size: 14px; }
+    .contact-card a { color: #1f4e9a; text-decoration: none; }
+    .contact-card a:hover { text-decoration: underline; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 32px 16px;
+      color: #9ca3af;
+      font-size: 13px;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 24px;
+    }
+    footer strong { color: #6b7280; }
+
+    @media (max-width: 600px) {
+      .site-header h1 { font-size: 24px; }
+      .section-card { padding: 20px 18px; }
+      .toc-list { grid-template-columns: 1fr; }
+      .header-meta { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-badge">法律文件</div>
+  <h1>用户服务协议</h1>
+  <p class="subtitle">可崽智能硬件设备配套软件</p>
+  <div class="header-meta">
+    <span>📅 更新日期：2026年03月21日</span>
+    <span>🏢 杭州酷可伴智能科技有限公司</span>
+  </div>
+</header>
+
+<div class="page-wrapper">
+
+  <!-- 重要提示 -->
+  <div class="notice-box">
+    <strong>【重要提示】</strong>请你仔细阅读并充分理解本协议全部条款，尤其是免除或限制我们责任的条款、管辖与争议解决条款等。如果你不同意本协议任何条款，请勿下载、安装或使用本软件及相关服务；一旦你下载、安装、使用本软件或点击"同意"，即视为你已充分理解并完全接受本协议全部内容，自愿与我们建立法律关系。
+  </div>
+
+  <!-- 目录 -->
+  <div class="toc-card">
+    <div class="toc-title">📋 目录</div>
+    <ul class="toc-list">
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s1">一、服务内容与范围</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s2">二、用户资格与账号管理</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s3">三、用户权利与义务</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s4">四、我们的权利与义务</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s5">五、知识产权</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s6">六、免责条款</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s7">七、协议的变更、终止与解除</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s8">八、管辖与争议解决</a></li>
+      <li><a href="file:///Users/ziang/Downloads/%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.html#s9">九、其他条款</a></li>
+    </ul>
+  </div>
+
+  <!-- 一 -->
+  <div class="section-card" id="s1">
+    <div class="section-header">
+      <div class="section-number">一</div>
+      <h2>服务内容与范围</h2>
+    </div>
+    <div class="clause">
+      <span class="clause-number">1.1</span>
+      本软件是硬件设备（<strong>可崽</strong>）的配套服务载体，核心服务包括但不限于：
+    </div>
+    <ul class="content-list">
+      <li><strong>图像风险行为识别功能</strong>：通过采集图像信息，识别用户异常或风险行为并提醒；</li>
+      <li><strong>课程播放功能</strong>：提供预设或用户选择的各类课程播放、暂停、回放等服务；</li>
+      <li><strong>照片采集功能</strong>：协助用户采集、存储、管理与硬件设备相关的照片信息；</li>
+      <li>为实现上述功能所必需的账号管理、设备绑定、数据同步等辅助服务。</li>
+    </ul>
+    <div class="clause">
+      <span class="clause-number">1.2</span>
+      我们有权根据技术升级、产品迭代、用户需求变化及法律法规要求，对本软件的服务内容、功能模块进行更新、优化、暂停或调整，相关变更将通过软件弹窗、站内通知等合理方式告知你，你可根据自身需求选择是否继续使用更新后的服务；若你不同意变更后的服务，可停止使用本软件，双方权利义务按本协议约定终止。
+    </div>
+    <div class="clause">
+      <span class="clause-number">1.3</span>
+      本软件服务仅适用于中国大陆地区上市的对应硬件设备，你需确保所使用的硬件设备为正规渠道购买、符合国家相关质量标准的合格产品，否则可能无法正常使用本软件服务。
+    </div>
+  </div>
+
+  <!-- 二 -->
+  <div class="section-card" id="s2">
+    <div class="section-header">
+      <div class="section-number">二</div>
+      <h2>用户资格与账号管理</h2>
+    </div>
+    <div class="clause">
+      <span class="clause-number">2.1</span>
+      你需具备完全民事行为能力（年满18周岁）；若你为未成年人（未满18周岁），需在法定监护人的同意和监督下使用本软件，且法定监护人需阅读并同意本协议全部条款。未成年人使用本软件时，应遵守国家相关法律法规及本协议约定，监护人应承担相应的监护责任。
+    </div>
+    <div class="clause">
+      <span class="clause-number">2.2</span>
+      使用本软件需注册账号，你应提供真实、准确、完整的注册信息（包括但不限于手机号、验证码等），并及时更新相关信息，确保信息的有效性。你应对账号的安全性负责，妥善保管账号、密码及相关验证信息，不得将账号转借、出租、出售给第三方，不得泄露账号信息。
+    </div>
+    <div class="clause">
+      <span class="clause-number">2.3</span>
+      因你自身保管不善导致账号被盗用、冒用，或因账号转借、出租、出售产生的一切责任和损失，由你自行承担；若你发现账号异常使用，应及时通知我们，我们将根据你的申请采取冻结账号、重置密码等合理措施，但不承担因账号异常使用造成的直接或间接损失。
+    </div>
+    <div class="clause">
+      <span class="clause-number">2.4</span>
+      你可根据自身需求申请注销账号，账号注销后，我们将按照《隐私政策》的约定处理你的个人信息，同时你将丧失该账号对应的全部服务权益，已产生的服务费用（如有）不予退还。
+    </div>
+  </div>
+
+  <!-- 三 -->
+  <div class="section-card" id="s3">
+    <div class="section-header">
+      <div class="section-number">三</div>
+      <h2>用户权利与义务</h2>
+    </div>
+    <h3>3.1 用户权利</h3>
+    <ul class="content-list">
+      <li>有权依法使用本软件提供的各项服务，对服务质量提出建议和反馈；</li>
+      <li>有权查询、更正、删除自身的个人信息（详见《隐私政策》相关条款），有权撤回对个人信息收集、使用的同意；</li>
+      <li>有权根据本协议约定，终止使用本软件及相关服务。</li>
+    </ul>
+    <h3>3.2 用户义务</h3>
+    <ul class="content-list">
+      <li>严格遵守国家法律法规、规章及本协议约定，不得利用本软件及相关服务从事任何违法违规活动，包括但不限于：传播违法、低俗、暴力、色情等不良信息；侵犯他人著作权、肖像权、隐私权等合法权益；篡改、破解本软件程序，干扰软件正常运行；利用软件进行欺诈、造谣、诽谤等行为；</li>
+      <li>合理使用本软件服务，不得恶意占用软件资源、干扰其他用户正常使用，不得利用本软件及硬件设备的图像采集、风险识别功能侵犯他人隐私或合法权益；</li>
+      <li>配合我们完成必要的身份验证、合规检查，如实提供相关信息，不得提供虚假、伪造的信息；</li>
+      <li>自行承担因使用本软件服务产生的网络费用、设备损耗等相关成本；</li>
+      <li>不得将本软件的服务内容、程序代码、功能模块等进行复制、传播、转让、出租，不得对软件进行逆向工程、反向编译等操作；</li>
+      <li>理解并接受本软件服务可能存在的技术瑕疵、服务中断等情况，不得因此要求我们承担超出本协议约定的责任。</li>
+    </ul>
+  </div>
+
+  <!-- 四 -->
+  <div class="section-card" id="s4">
+    <div class="section-header">
+      <div class="section-number">四</div>
+      <h2>我们的权利与义务</h2>
+    </div>
+    <h3>4.1 我们的权利</h3>
+    <ul class="content-list">
+      <li>有权按照本协议约定提供、更新、优化本软件服务，有权对用户的违规行为进行警告、限制账号功能、冻结账号、注销账号等处理；</li>
+      <li>有权根据《隐私政策》的约定，收集、使用、存储、处理用户的个人信息，用于实现软件服务功能；</li>
+      <li>有权在法律法规允许的范围内，对用户使用本软件的行为数据进行分析、统计，用于优化服务质量、开发新功能；</li>
+      <li>有权在本软件中展示合理的产品推广、服务通知等内容，但不得侵犯用户的合法权益。</li>
+    </ul>
+    <h3>4.2 我们的义务</h3>
+    <ul class="content-list">
+      <li>按照本协议约定，为用户提供稳定、安全的软件服务，尽力保障软件正常运行，及时处理软件故障；</li>
+      <li>严格遵守《中华人民共和国网络安全法》《中华人民共和国个人信息保护法》等相关法律法规，保护用户的个人信息安全，不得泄露、篡改、出售用户个人信息（详见《隐私政策》）；</li>
+      <li>对用户反馈的问题、建议及时进行处理和回复，不断优化服务质量；</li>
+      <li>向用户明确告知软件服务的相关规则、隐私政策、服务变更等信息，不得隐瞒或误导用户；</li>
+      <li>按照国家相关规定，对软件进行安全检测、备案，确保软件符合合规要求。</li>
+    </ul>
+  </div>
+
+  <!-- 五 -->
+  <div class="section-card" id="s5">
+    <div class="section-header">
+      <div class="section-number">五</div>
+      <h2>知识产权</h2>
+    </div>
+    <div class="clause">
+      <span class="clause-number">5.1</span>
+      本软件的全部知识产权（包括但不限于著作权、商标权、专利权、商业秘密等）均归我们所有，软件的程序代码、界面设计、文字内容、图标、logo等均受法律法规保护。
+    </div>
+    <div class="clause">
+      <span class="clause-number">5.2</span>
+      用户在使用本软件过程中产生的照片、使用记录等内容，若涉及用户原创内容，用户享有相应的知识产权，但用户授予我们免费、非独占、可转授权的使用权，用于实现软件服务功能（如照片存储、数据同步等），我们不得用于本协议约定之外的其他用途。
+    </div>
+    <div class="clause">
+      <span class="clause-number">5.3</span>
+      未经我们书面许可，用户不得擅自使用、复制、传播、修改本软件的任何知识产权内容，否则将承担相应的法律责任。
+    </div>
+  </div>
+
+  <!-- 六 -->
+  <div class="section-card" id="s6">
+    <div class="section-header">
+      <div class="section-number">六</div>
+      <h2>免责条款</h2>
+    </div>
+    <div class="clause">
+      <span class="clause-number">6.1</span>
+      因不可抗力（包括但不限于自然灾害、地震、洪水、台风、战争、政策调整、网络中断、服务器故障等）导致本软件服务中断、无法正常使用的，我们不承担任何责任，不可抗力发生后，我们将尽力及时恢复服务，并通知用户。
+    </div>
+    <div class="clause">
+      <span class="clause-number">6.2</span>
+      因用户自身原因（包括但不限于账号被盗用、设备故障、网络异常、操作不当等）导致的任何损失，由用户自行承担，我们不承担责任。
+    </div>
+    <div class="clause">
+      <span class="clause-number">6.3</span>
+      本软件提供的基于图像的风险行为识别功能，仅为辅助提醒作用，我们不保证识别结果的绝对准确性，因识别结果偏差导致的任何损失，我们不承担责任；用户应结合实际情况，自行判断并防范风险。
+    </div>
+    <div class="highlight-block">
+      ⚠️ 风险识别结果仅供参考，不构成任何形式的法律承诺或保证，不能作为行政处罚、法律程序等的唯一依据。
+    </div>
+    <div class="clause">
+      <span class="clause-number">6.4</span>
+      因第三方原因（包括但不限于第三方软件干扰、网络服务提供商故障、第三方侵权等）导致本软件服务异常或用户损失的，我们不承担直接责任，但将尽力协助用户排查问题、追究第三方责任。
+    </div>
+    <div class="clause">
+      <span class="clause-number">6.5</span>
+      用户利用本软件从事违法违规活动、违反本协议约定导致的任何损失，由用户自行承担，同时我们有权终止服务，并追究用户的法律责任。
+    </div>
+    <div class="clause">
+      <span class="clause-number">6.6</span>
+      本软件服务按"现状"提供，我们不保证服务无瑕疵、无中断，不承担因服务质量问题导致的间接损失（包括但不限于预期利益、商业损失等）。
+    </div>
+  </div>
+
+  <!-- 七 -->
+  <div class="section-card" id="s7">
+    <div class="section-header">
+      <div class="section-number">七</div>
+      <h2>协议的变更、终止与解除</h2>
+    </div>
+    <div class="clause">
+      <span class="clause-number">7.1</span>
+      我们有权根据法律法规变化、产品升级等情况，对本协议进行修改，修改后的协议将通过软件弹窗、站内通知等方式告知用户，用户继续使用本软件服务的，视为接受修改后的协议；若用户不同意修改后的协议，可停止使用本软件，协议终止。
+    </div>
+    <div class="clause">
+      <span class="clause-number">7.2</span>
+      协议终止的情形包括：
+    </div>
+    <ul class="content-list">
+      <li>用户主动停止使用本软件，且未再恢复使用的；</li>
+      <li>用户账号被注销的；</li>
+      <li>我们终止本软件服务的；</li>
+      <li>用户违反本协议约定，我们依法终止服务的；</li>
+      <li>法律法规规定的其他情形。</li>
+    </ul>
+    <div class="clause">
+      <span class="clause-number">7.3</span>
+      协议终止后，双方根据本协议约定产生的权利义务关系终止，但用户的违法违规责任、知识产权保护、隐私保护等条款仍继续有效，直至相关义务履行完毕。
+    </div>
+  </div>
+
+  <!-- 八 -->
+  <div class="section-card" id="s8">
+    <div class="section-header">
+      <div class="section-number">八</div>
+      <h2>管辖与争议解决</h2>
+    </div>
+    <div class="clause">
+      <span class="clause-number">8.1</span>
+      本协议的订立、履行、解释及争议解决，均适用中华人民共和国法律（不包括冲突法规则）。
+    </div>
+    <div class="clause">
+      <span class="clause-number">8.2</span>
+      因本协议引起的或与本协议有关的任何争议，双方应首先通过友好协商解决；协商不成的，任何一方均有权向我们公司所在地人民法院提起诉讼。
+    </div>
+  </div>
+
+  <!-- 九 -->
+  <div class="section-card" id="s9">
+    <div class="section-header">
+      <div class="section-number">九</div>
+      <h2>其他条款</h2>
+    </div>
+    <div class="clause">
+      <span class="clause-number">9.1</span>
+      本协议的附件（《隐私政策》）为本协议不可分割的组成部分，与本协议具有同等法律效力，用户使用本软件服务，视为同时接受《隐私政策》的全部条款。
+    </div>
+    <div class="clause">
+      <span class="clause-number">9.2</span>
+      若本协议中的任何条款被认定为无效或不可执行，不影响其他条款的效力，其他条款仍继续有效。
+    </div>
+    <div class="clause">
+      <span class="clause-number">9.3</span>
+      如有任何疑问、建议或投诉，请通过以下方式联系我们：
+    </div>
+    <div class="contact-card">
+      <p>📧 邮箱：<a href="mailto:ziang@kokopal.com">ziang@kokopal.com</a></p>
+      <p>🏢 公司：杭州酷可伴智能科技有限公司</p>
+    </div>
+    <div class="clause" style="margin-top:14px">
+      <span class="clause-number">9.4</span>
+      本协议自你点击"同意"或下载、安装、使用本软件之日起生效，有效期至你终止使用本软件服务之日止。
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>杭州酷可伴智能科技有限公司</strong> &nbsp;|&nbsp; 可崽智能硬件设备配套软件
+  <p style="margin-top:12px;font-size:12px;color:#9ca3af;">©2026 杭州酷可伴智能科技有限公司 版权所有 &nbsp; 备案号：浙ICP备2026028024号-2</p>
+</footer>
+
+
+
+</body></html>
