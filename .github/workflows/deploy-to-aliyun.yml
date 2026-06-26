@@ -37,7 +37,13 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           printf '%s\n' "${{ secrets.ALIYUN_SSH_PRIVATE_KEY }}" > ~/.ssh/aliyun_deploy_key
+          sed -i 's/\r$//' ~/.ssh/aliyun_deploy_key
           chmod 600 ~/.ssh/aliyun_deploy_key
+          if ! ssh-keygen -y -f ~/.ssh/aliyun_deploy_key > /dev/null; then
+            echo "ALIYUN_SSH_PRIVATE_KEY is not a valid OpenSSH private key."
+            echo "Please paste the complete private key, including BEGIN/END lines, into the GitHub secret."
+            exit 1
+          fi
           ssh-keyscan -p "${SSH_PORT}" "${SSH_HOST}" >> ~/.ssh/known_hosts
 
       - name: Deploy website directories

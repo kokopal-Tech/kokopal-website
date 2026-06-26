@@ -42,6 +42,13 @@ Action 会把仓库根目录下的网页文件夹同步到阿里云服务器：
 -----END OPENSSH PRIVATE KEY-----
 ```
 
+注意：
+
+- 这里必须是私钥，不是 `.pub` 公钥。
+- 不要粘贴 PuTTY `.ppk` 格式；需要 OpenSSH 私钥格式。
+- 如果从本机 `scripts/web-deploy.pem` 复制，可以用 `cat scripts/web-deploy.pem` 显示后完整复制。
+- 粘贴到 GitHub Secret 时要保留多行换行，不要压成一整行。
+
 ## 服务器要求
 
 服务器需要满足：
